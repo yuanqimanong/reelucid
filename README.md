@@ -17,6 +17,28 @@ docker compose exec reelucid cat /data/secrets/admin_token
 
 默认部署只启动一个 `reelucid` 容器。SQLite、原片、产物、凭据和另行安装的模型保存在 `reelucid-data` 卷。镜像预装 Whisper `small`，使用 CPU INT8 推理。DTK 及其数据库、Redis 和远程小红书服务可按需安装。
 
+### 从 Docker Hub 拉取镜像
+
+镜像发布后，在项目根目录的 `.env` 中设置 `REELUCID_IMAGE=你的DockerID/reelucid:1.0.1`，把 `你的DockerID` 替换为发布者的 Docker Hub 用户名。私有仓库需要先在部署机器上运行 `docker login`。
+
+```bash
+docker compose pull reelucid
+docker compose up -d --no-build --wait reelucid
+```
+
+### 发布到 Docker Hub
+
+1. 在个人命名空间下创建 `reelucid` 镜像仓库，再创建权限为 `Read & Write` 的个人访问令牌。[创建仓库](https://docs.docker.com/docker-hub/repos/create/) · [创建令牌](https://docs.docker.com/security/access-tokens/)
+2. 打开 GitHub 仓库的 `Settings → Secrets and variables → Actions`。在 `Variables` 添加 `DOCKERHUB_USERNAME`，值为 Docker Hub 用户名。在 `Secrets` 添加 `DOCKERHUB_TOKEN`，值为个人访问令牌。
+3. 将工作流提交推送到 GitHub，在待发布提交上创建并推送与 `pyproject.toml` 版本一致的 Git 标签。以 `1.0.1` 为例：
+
+   ```bash
+   git tag v1.0.1
+   git push origin v1.0.1
+   ```
+
+GitHub Actions 在 Python、前端和容器就绪检查通过后推送 `你的DockerID/reelucid:1.0.1`。发布目标为 `linux/amd64`，镜像标签取自项目版本。[发布工作流](.github/workflows/ci.yml)
+
 ### Web 使用
 
 1. 打开「新建任务」，上传音视频或粘贴一条视频链接，选好预设和语言后提交。普通转录可以直接用默认预设。

@@ -1,5 +1,9 @@
 name: checks
-on: [push, pull_request]
+on:
+  push:
+    branches: ['**']
+    tags: ['v[0-9]+.[0-9]+.[0-9]+']
+  pull_request:
 permissions:
   contents: read
 jobs:
@@ -46,6 +50,7 @@ jobs:
       - run: npm run check
       - run: npm run build
   container:
+    if: github.ref_type != 'tag'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -56,3 +61,55 @@ jobs:
           push: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
+  publish:
+    name: Publish to Docker Hub
+    if: github.event_name == 'push' && github.ref_type == 'tag'
+    needs: [python, web]
+    runs-on: ubuntu-latest
+    env:
+      REELUCID_IMAGE: reelucid:release
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Check release version
+        id: release
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python - <<'PY'
+          import os
+          import tomllib
+
+          with open("pyproject.toml", "rb") as project:
+              version = tomllib.load(project)["project"]["version"]
+          tag = os.environ["RELEASE_TAG"]
+          if tag != f"v{version}":
+              raise SystemExit(f"Release tag {tag} must match pyproject.toml version {version}")
+          PY
+          echo "version=${RELEASE_TAG#v}" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          tags: ${{ env.REELUCID_IMAGE }}
+          load: true
+          cache-from: type=gha
+      - name: Start and check release container
+        run: docker compose up -d --no-build --pull never --wait --wait-timeout 150 reelucid
+      - name: Print release container logs
+        if: failure()
+        run: docker compose logs --no-color reelucid
+      - name: Push versioned image
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          : "${DOCKERHUB_USERNAME:?Set the DOCKERHUB_USERNAME Actions variable}"
+          : "${DOCKERHUB_TOKEN:?Set the DOCKERHUB_TOKEN Actions secret}"
+          printf '%s' "$DOCKERHUB_TOKEN" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
+          image="docker.io/${DOCKERHUB_USERNAME}/reelucid:${VERSION}"
+          docker tag "$REELUCID_IMAGE" "$image"
+          docker push "$image"
