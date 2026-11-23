@@ -1,0 +1,89 @@
+{
+  "date": "2026-11-23",
+  "scope": "same public TikTok sample tiktok-1; DTK service owned by operator",
+  "older_dtk_downloader_configured": false,
+  "existing_dtk_reelucid": {
+    "image": "reelucid:0.1.0-egress",
+    "mode": "proxy",
+    "checks": [
+      {
+        "id": "tiktok-1",
+        "status": "failed",
+        "download_completed": false,
+        "media": {},
+        "elapsed_seconds": 3.12,
+        "error": {
+          "code": "SOURCE_ACCESS_REQUIRED",
+          "message": "来源服务拒绝了访问请求（HTTP 403）。",
+          "retryable": false
+        }
+      },
+      {
+        "id": "douyin-1",
+        "status": "succeeded",
+        "download_completed": true,
+        "media": {
+          "duration_ms": 19782,
+          "has_audio": true,
+          "has_video": true,
+          "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+          "source_origin_seconds": 0,
+          "audio_start_seconds": 0
+        },
+        "elapsed_seconds": 7.59,
+        "error": null,
+        "segments": 1,
+        "verified_artifacts": [
+          "transcript.json",
+          "subtitle.srt",
+          "subtitle.vtt",
+          "document.txt",
+          "manifest.json"
+        ]
+      }
+    ],
+    "image_id": "sha256:68cacbd3d82bebdbdeb2e7d2ea3daf119711d9108aa9e134cb9bca322f6fcee2",
+    "dtk_image": "evil0ctal/douyin_tiktok_download_api:5.1.11",
+    "source_proxy_enabled": true,
+    "removed_disposable_container": true
+  },
+  "official_new_dtk": [
+    {
+      "dtk_version": "5.1.13",
+      "isolation": "fresh volumes and no imported platform session",
+      "compose_up_exit": 0,
+      "created_isolated_account": true,
+      "service_version": "5.1.13",
+      "downloader_configured": true,
+      "download_request": {
+        "http": 202,
+        "error_code": null
+      },
+      "task": {
+        "state": "failed",
+        "error_code": "NOT_FOUND"
+      },
+      "download_record": {
+        "status": null,
+        "error_code": null
+      },
+      "isolated_project_cleaned": true
+    },
+    {
+      "dtk_version": "5.1.13",
+      "isolation": "fresh volumes and no imported platform session",
+      "parse_first": true,
+      "compose_up_exit": 0,
+      "created_isolated_account": true,
+      "service_version": "5.1.13",
+      "downloader_configured": true,
+      "tiktok_active_identities": 0,
+      "parse": {
+        "http": 202,
+        "state": "failed",
+        "error_code": "IDENTITY_POOL_EXHAUSTED"
+      },
+      "isolated_project_cleaned": true
+    }
+  ]
+}

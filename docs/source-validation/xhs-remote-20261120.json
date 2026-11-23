@@ -1,0 +1,16 @@
+[
+  {
+    "sample": "xhs-public-6aa37e990000000012035802",
+    "http": 200,
+    "has_data": true,
+    "video": true,
+    "num_media": 1
+  },
+  {
+    "sample": "xhs-public-6a7b81d5000000003203233c",
+    "http": 200,
+    "has_data": true,
+    "video": true,
+    "num_media": 1
+  }
+]

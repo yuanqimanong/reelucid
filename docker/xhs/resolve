@@ -1,0 +1,7 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-3.0-only
+# Keep the upstream Python ABI private to this short-lived parser.
+set -eu
+exec 2>/dev/null
+export LD_LIBRARY_PATH=/opt/reelucid-xhs/python/lib
+exec /opt/reelucid-xhs/python/bin/python3.12 -I -B /opt/reelucid-xhs/resolve.py

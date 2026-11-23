@@ -1,0 +1,58 @@
+[
+  {
+    "id": "wikimedia-climate-zdf",
+    "platform": "Wikimedia Commons",
+    "url": "https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm",
+    "adapter_id": "yt_dlp",
+    "timeout_seconds": 220
+  },
+  {
+    "id": "peertube-framatube",
+    "platform": "PeerTube",
+    "url": "https://framatube.org/videos/watch/9c9de5e8-0a1e-484a-b099-e80766180a6d",
+    "adapter_id": "yt_dlp",
+    "timeout_seconds": 300
+  },
+  {
+    "id": "clyp-public",
+    "platform": "Clyp",
+    "url": "https://clyp.it/iynkjk4b",
+    "adapter_id": "yt_dlp",
+    "timeout_seconds": 160
+  },
+  {
+    "id": "bilibili-native",
+    "platform": "Bilibili",
+    "url": "https://www.bilibili.com/video/BV13Ha86pELF/",
+    "adapter_id": "yt_dlp",
+    "timeout_seconds": 110
+  },
+  {
+    "id": "videopress-official",
+    "platform": "VideoPress",
+    "url": "https://videopress.com/embed/BZHMfMfN",
+    "adapter_id": "yt_dlp",
+    "timeout_seconds": 150
+  },
+  {
+    "id": "un-webtv-public",
+    "platform": "UN Web TV",
+    "url": "https://webtv.un.org/en/asset/k1o/k1o7stmi6p",
+    "adapter_id": "yt_dlp",
+    "timeout_seconds": 450
+  },
+  {
+    "id": "freesound-public",
+    "platform": "Freesound",
+    "url": "http://www.freesound.org/people/miklovan/sounds/194503/",
+    "adapter_id": "yt_dlp",
+    "timeout_seconds": 160
+  },
+  {
+    "id": "bilibili-adapter",
+    "platform": "Bilibili",
+    "url": "https://www.bilibili.com/video/BV13Ha86pELF/",
+    "adapter_id": "bilibili",
+    "timeout_seconds": 120
+  }
+]

@@ -1,0 +1,27 @@
+# Shared with the Reelucid API only through its existing Compose network.
+services:
+  xhs-resolver:
+    image: joeanamier/xhs-downloader:2.8@sha256:5878c0972cc1236cd8ac4e069f9202152434d8402df52bf427210229b8a53fb9
+    command: [python, main.py, api]
+    labels: {io.reelucid.owner: "${REELUCID_COMPONENT_OWNER:?}"}
+    volumes: [xhs-data:/app/Volume]
+    networks:
+      core:
+        aliases: [xhs-resolver]
+    restart: unless-stopped
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    read_only: true
+    tmpfs: ["/tmp:size=64m,mode=1777"]
+    mem_limit: 768m
+    cpus: 1.0
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5556/openapi.json', timeout=3).close()"]
+      interval: 10s
+      timeout: 5s
+      start_period: 15s
+      retries: 5
+volumes:
+  xhs-data: {}
+networks:
+  core: {external: true, name: "${REELUCID_COMPONENT_NETWORK:?}"}

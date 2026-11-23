@@ -1,0 +1,243 @@
+{
+  "started_at": "2026-11-11T14:00:20.722940+00:00",
+  "authentication": "public content; no user login/Cookie; DTK minted guest identity; local API authenticated",
+  "cases": [
+    {
+      "id": "xhs-public-6a7b81d5000000003203233c",
+      "platform": "Xiaohongshu",
+      "url": "https://www.xiaohongshu.com/explore/6a7b81d5000000003203233c",
+      "adapter_id": "xhs",
+      "started_at": "2026-11-11T14:00:21.442988+00:00",
+      "job_id": "job_fdaceeb585cd4c858fc89907699c1272",
+      "status": "succeeded",
+      "stage": "completed",
+      "error": null,
+      "elapsed_seconds": 10.16,
+      "download_completed": true,
+      "media": {
+        "duration_ms": 19134,
+        "has_audio": true,
+        "has_video": true,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.0
+      },
+      "artifacts": [
+        {
+          "artifact_id": "art_11a1086cbe9548feb59c491a4d479245",
+          "format": "json",
+          "sha256": "123c38bbc9b4e7d420fa4e2db974103ee7d3043482755855bcede59de2d1eb2f",
+          "size_bytes": 218
+        },
+        {
+          "artifact_id": "art_f6d7ae8484884fac8abd853f12762acd",
+          "format": "srt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "artifact_id": "art_dbc09bed0c4c434fb1cdda41b04a76f7",
+          "format": "vtt",
+          "sha256": "8eb5aec53542eaedb7502b22fb677161abba1e265b1338f1af1369a1f689837c",
+          "size_bytes": 8
+        },
+        {
+          "artifact_id": "art_1c6b9940d96440598ec51cc5ec044738",
+          "format": "txt",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+          "size_bytes": 1
+        },
+        {
+          "artifact_id": "art_3b1021fac8064dd4bd5c8a40459b211a",
+          "format": "json",
+          "sha256": "22c91343289b424cbe90a50e371f5bb56a0fbc707afe6fefa00433e637cf32f1",
+          "size_bytes": 1911
+        }
+      ],
+      "segment_count": 0,
+      "duration_ms": 19134,
+      "warnings": [
+        "no_speech"
+      ],
+      "share_token_redacted": true
+    },
+    {
+      "id": "xhs-public-6a7918e1000000002403c179",
+      "platform": "Xiaohongshu",
+      "url": "https://www.xiaohongshu.com/explore/6a7918e1000000002403c179",
+      "adapter_id": "xhs",
+      "started_at": "2026-11-11T14:00:31.614206+00:00",
+      "job_id": "job_d721a0d2f5a44c73998ab6afbf4ed3b0",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "SOURCE_ACCESS_REQUIRED",
+        "message": "小红书未返回作品数据，请检查分享链接是否有效、Cookie、网络或站点风控。",
+        "retryable": true
+      },
+      "elapsed_seconds": 9.62,
+      "download_completed": false,
+      "media": {},
+      "artifacts": [],
+      "share_token_redacted": true
+    },
+    {
+      "id": "xhs-public-6aa37e990000000012035802",
+      "platform": "Xiaohongshu",
+      "url": "https://www.xiaohongshu.com/explore/6aa37e990000000012035802",
+      "adapter_id": "xhs",
+      "started_at": "2026-11-11T14:00:41.239950+00:00",
+      "job_id": "job_c14cdfa9cee14f338bbf321b6db56d9b",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "SOURCE_ACCESS_REQUIRED",
+        "message": "小红书未返回作品数据，请检查分享链接是否有效、Cookie、网络或站点风控。",
+        "retryable": true
+      },
+      "elapsed_seconds": 2.54,
+      "download_completed": false,
+      "media": {},
+      "artifacts": [],
+      "share_token_redacted": true
+    },
+    {
+      "id": "douyin-1",
+      "platform": "Douyin",
+      "url": "https://www.douyin.com/video/6961737553342991651",
+      "adapter_id": "dtk",
+      "started_at": "2026-11-11T14:00:43.782891+00:00",
+      "job_id": "job_070d322e2a4046179fdf04454f9f278a",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "DOWNLOAD_FAILED",
+        "message": "直链下载失败，请检查地址、有效期和网络。",
+        "retryable": true
+      },
+      "elapsed_seconds": 1.02,
+      "download_completed": false,
+      "media": {},
+      "artifacts": [],
+      "share_token_redacted": false
+    },
+    {
+      "id": "douyin-2",
+      "platform": "Douyin",
+      "url": "https://www.douyin.com/video/6982497745948921092",
+      "adapter_id": "dtk",
+      "started_at": "2026-11-11T14:00:44.808657+00:00",
+      "job_id": "job_23b9d5e06c214977923e9080faf9e06c",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "DOWNLOAD_FAILED",
+        "message": "直链下载失败，请检查地址、有效期和网络。",
+        "retryable": true
+      },
+      "elapsed_seconds": 1.02,
+      "download_completed": false,
+      "media": {},
+      "artifacts": [],
+      "share_token_redacted": false
+    },
+    {
+      "id": "tiktok-1",
+      "platform": "TikTok",
+      "url": "https://www.tiktok.com/@patroxofficial/video/6742501081818877190",
+      "adapter_id": "dtk",
+      "started_at": "2026-11-11T14:00:45.836037+00:00",
+      "job_id": "job_e69f1f9f10d246f29a099832c047a0ec",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "SOURCE_ACCESS_REQUIRED",
+        "message": "平台解析失败，请检查解析服务的身份池、登录态和网络。",
+        "retryable": true
+      },
+      "elapsed_seconds": 10.62,
+      "download_completed": false,
+      "media": {},
+      "artifacts": [],
+      "share_token_redacted": false
+    }
+  ],
+  "capabilities": {
+    "version": "0.1.0",
+    "asr": [
+      {
+        "id": "tiny",
+        "engine": "faster_whisper",
+        "state": "ready"
+      },
+      {
+        "id": "base",
+        "engine": "faster_whisper",
+        "state": "not_installed"
+      },
+      {
+        "id": "small",
+        "engine": "faster_whisper",
+        "state": "not_installed"
+      },
+      {
+        "id": "medium",
+        "engine": "faster_whisper",
+        "state": "not_installed"
+      },
+      {
+        "id": "large-v3",
+        "engine": "faster_whisper",
+        "state": "not_installed"
+      },
+      {
+        "id": "large-v3-turbo",
+        "engine": "faster_whisper",
+        "state": "not_installed"
+      }
+    ],
+    "adapters": {
+      "bilibili": true,
+      "dtk": true,
+      "xhs": true,
+      "upload": true,
+      "http_media": true,
+      "yt_dlp": true
+    },
+    "available_adapters": [
+      "http_media",
+      "yt_dlp",
+      "bilibili",
+      "dtk",
+      "xhs"
+    ],
+    "source_resolver": {
+      "adapter_id": "dtk",
+      "configured": true,
+      "enabled": true
+    },
+    "xhs_resolver": {
+      "adapter_id": "xhs",
+      "configured": true,
+      "enabled": true
+    },
+    "source_catalogue_url": "/api/v1/source-platforms",
+    "operations": [
+      "transcribe",
+      "summarize",
+      "translate",
+      "extract",
+      "qa"
+    ],
+    "visual": false,
+    "offline": false,
+    "max_upload_bytes": 2147483648
+  },
+  "source_engine": {
+    "engine": "yt-dlp",
+    "version": "2026.10.26",
+    "extractor_count": 1755,
+    "scope": "single_vod_only"
+  },
+  "finished_at": "2026-11-11T14:00:56.457472+00:00"
+}

@@ -1,0 +1,3 @@
+/docker/reelucid-deno text eol=lf
+/docker/xhs/resolve text eol=lf
+/docs/openapi.json text eol=lf

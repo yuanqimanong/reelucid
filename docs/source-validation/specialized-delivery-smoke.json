@@ -1,0 +1,54 @@
+{
+  "image_id": "sha256:333d23c0c30948b25e7ac99989a83f37bd7c2e0298d4ef75a35c6aa77dff4a4c",
+  "artifacts": [
+    {
+      "case_id": "xhs-public-6a7918e1000000002403c179",
+      "format": "json",
+      "sha256_valid": true,
+      "size_bytes": 210844
+    },
+    {
+      "case_id": "xhs-public-6a7918e1000000002403c179",
+      "format": "srt",
+      "sha256_valid": true,
+      "size_bytes": 12064
+    },
+    {
+      "case_id": "xhs-public-6a7918e1000000002403c179",
+      "format": "json",
+      "sha256_valid": true,
+      "size_bytes": 232176
+    },
+    {
+      "case_id": "douyin-1",
+      "format": "json",
+      "sha256_valid": true,
+      "size_bytes": 934
+    },
+    {
+      "case_id": "douyin-1",
+      "format": "srt",
+      "sha256_valid": true,
+      "size_bytes": 48
+    },
+    {
+      "case_id": "douyin-1",
+      "format": "json",
+      "sha256_valid": true,
+      "size_bytes": 2681
+    }
+  ],
+  "ready": {
+    "ready": true
+  },
+  "source_resolver": {
+    "adapter_id": "dtk",
+    "configured": true,
+    "enabled": true
+  },
+  "xhs_resolver": {
+    "adapter_id": "xhs",
+    "configured": true,
+    "enabled": true
+  }
+}

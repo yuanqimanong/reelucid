@@ -1,0 +1,31 @@
+{
+  "image_id": "sha256:2432de255132bbe31853ee96ad5a49946915291f77dfa0beba9a7cb46f9891e0",
+  "checked_job_id": "job_0c4fb9bdf5dc4e8bba37edbc67630c20",
+  "artifacts": [
+    {
+      "format": "json",
+      "sha256_valid": true,
+      "size_bytes": 65083
+    },
+    {
+      "format": "srt",
+      "sha256_valid": true,
+      "size_bytes": 3941
+    },
+    {
+      "format": "json",
+      "sha256_valid": true,
+      "size_bytes": 72858
+    }
+  ],
+  "ready": {
+    "ready": true
+  },
+  "source_engine": {
+    "engine": "yt-dlp",
+    "version": "2026.10.26",
+    "extractor_count": 1755
+  },
+  "invalid_configuration_status": 422,
+  "transcript_segments": 46
+}

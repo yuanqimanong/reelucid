@@ -1,0 +1,93 @@
+{
+  "finished_at": "2026-11-23T06:23:56.857281+00:00",
+  "scope": "Disposable no-network Docker databases restored from DTK backups; no production modifications.",
+  "backup_set": "20261123-134811-db4c",
+  "backup_sha256_verified": {
+    "dtk-postgres.dump": true,
+    "postgres.tar.gz": true
+  },
+  "docker_architecture": "linux/amd64",
+  "source_image_id": "sha256:3f0b3f6bdf4912878444a36e6113a18346309583c4d1a61d81a0c511342a1afd",
+  "target_image": "timescale/timescaledb-ha@sha256:c72b4cb8aaa0a52c0870c2b0a48173c595ee9bef0f3d8f92c3f546c69fef3567",
+  "source": {
+    "postgres": "17.11",
+    "timescaledb": "2.31.0"
+  },
+  "target": {
+    "postgres": "17.12",
+    "timescaledb": "2.32.1"
+  },
+  "expected": {
+    "dtk_migration_head": "0016",
+    "schema_check": "MD5 of sorted public column descriptors (table, ordinal, column, PostgreSQL type, nullability); excludes indexes, triggers and constraints.",
+    "public_column_metadata_md5": "f2bca328c91007178811ceea07cab335",
+    "hypertables": 3,
+    "public_table_counts": {
+      "alembic_version": 1,
+      "api_keys": 1,
+      "archived_authors": 4,
+      "archived_contents": 4,
+      "audit_log": 1,
+      "collection_items": 0,
+      "collections": 0,
+      "content_snapshots": 8,
+      "identities": 24,
+      "identity_events": 24,
+      "media_downloads": 0,
+      "proxies": 0,
+      "request_log": 22,
+      "settings": 0,
+      "settings_version": 1,
+      "tasks": 20,
+      "transcriptions": 0,
+      "users": 1,
+      "watchlist": 0
+    }
+  },
+  "physical_clone": {
+    "source_cold_start_succeeded": true,
+    "extension_update_to_2_32_1": true,
+    "table_counts_match": true,
+    "columns_fingerprint_matches": true
+  },
+  "logical_same_source_pg_and_extension": {
+    "pg_restore_mode": "single process, --exit-on-error --no-owner --no-privileges, timescaledb_pre_restore / post_restore",
+    "matched_physical": true
+  },
+  "logical_new_pg_17_12_volume": {
+    "source_version_then_update": {
+      "extension_at_restore": "2.31.0",
+      "passed": true,
+      "stage": "complete",
+      "pg_restore_exit": 0,
+      "postgres": "17.12",
+      "extension": "2.32.1",
+      "hypertables": 3,
+      "dtk_head_0016": true,
+      "public_table_count": 19,
+      "table_counts_preserved": true,
+      "schema_preserved": true
+    },
+    "direct_target_version": {
+      "extension_at_restore": "2.32.1",
+      "passed": false,
+      "stage": "post_restore",
+      "pg_restore_exit": 0,
+      "failure": "exec exited 3: version mismatch"
+    }
+  },
+  "scheduled_background_job_wrote_probe_row_on_2_32_1": true,
+  "cleanup_verified": true,
+  "limitations": [
+    "Checks compare structure and aggregate counts only. Secret values, individual business rows, owner and ACL restoration were not inspected.",
+    "The working logical route restores into an empty database with TimescaleDB 2.31.0 first, runs post_restore, then upgrades to 2.32.1.",
+    "The physical drill briefly starts 17.12 with the old extension before ALTER. Upstream recommends upgrading the extension before PostgreSQL when possible.",
+    "This database drill does not exercise API workers or video downloads."
+  ],
+  "references": [
+    "https://github.com/timescale/timescaledb/releases/tag/2.32.1",
+    "https://hub.docker.com/v2/repositories/timescale/timescaledb-ha/tags/pg17.12-ts2.32.1-r606.1",
+    "https://www.tigerdata.com/docs/deploy/self-hosted/backup-and-restore/logical-backup",
+    "https://www.tigerdata.com/docs/deploy/self-hosted/upgrades/upgrade-docker"
+  ]
+}

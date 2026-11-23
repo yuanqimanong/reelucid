@@ -1,0 +1,173 @@
+{
+  "date": "2026-11-23",
+  "image": "reelucid:0.1.0-single",
+  "image_id": "sha256:cffcddadd5fb70f8330acae41fa7e127eb23c88f319b7b3d8f5ccd352d5cddbc",
+  "yt_dlp": "2026.10.26",
+  "asr": "faster-whisper tiny on CPU",
+  "manifest": "yt-dlp-public-samples-20261123.json",
+  "method": "Public URLs, no platform cookies or proxy, temporary read-only-root containers",
+  "cases": [
+    {
+      "id": "wikimedia-climate-zdf",
+      "platform": "Wikimedia Commons",
+      "adapter": "yt_dlp",
+      "status": "succeeded",
+      "download_completed": true,
+      "duration_ms": 45327,
+      "has_audio": true,
+      "segments": 8,
+      "error_code": null,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "id": "peertube-framatube",
+      "platform": "PeerTube",
+      "adapter": "yt_dlp",
+      "status": "succeeded",
+      "download_completed": true,
+      "duration_ms": 114063,
+      "has_audio": true,
+      "segments": 27,
+      "error_code": null,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "id": "clyp-public",
+      "platform": "Clyp",
+      "adapter": "yt_dlp",
+      "status": "succeeded",
+      "download_completed": true,
+      "duration_ms": 51266,
+      "has_audio": true,
+      "segments": 1,
+      "error_code": null,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "id": "bilibili-native",
+      "platform": "Bilibili",
+      "adapter": "yt_dlp",
+      "status": "failed",
+      "download_completed": false,
+      "duration_ms": null,
+      "has_audio": null,
+      "segments": null,
+      "error_code": "EXTRACTOR_BROKEN",
+      "verified_artifacts": []
+    },
+    {
+      "id": "videopress-official",
+      "platform": "VideoPress",
+      "adapter": "yt_dlp",
+      "status": "failed",
+      "download_completed": false,
+      "duration_ms": null,
+      "has_audio": null,
+      "segments": null,
+      "error_code": "EXTRACTOR_BROKEN",
+      "verified_artifacts": []
+    },
+    {
+      "id": "un-webtv-public",
+      "platform": "UN Web TV",
+      "adapter": "yt_dlp",
+      "status": "failed",
+      "download_completed": false,
+      "duration_ms": null,
+      "has_audio": null,
+      "segments": null,
+      "error_code": "EXTRACTOR_BROKEN",
+      "verified_artifacts": []
+    },
+    {
+      "id": "freesound-public",
+      "platform": "Freesound",
+      "adapter": "yt_dlp",
+      "status": "succeeded",
+      "download_completed": true,
+      "duration_ms": 130273,
+      "has_audio": true,
+      "segments": 0,
+      "error_code": null,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "id": "bilibili-adapter",
+      "platform": "Bilibili",
+      "adapter": "bilibili",
+      "status": "succeeded",
+      "download_completed": true,
+      "duration_ms": 12440,
+      "has_audio": true,
+      "segments": 0,
+      "error_code": null,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "sample": "videopress-official",
+      "path": "reelucid-yt_dlp",
+      "phase": "extract",
+      "result": "http_403"
+    },
+    {
+      "sample": "videopress-official",
+      "path": "stock-yt_dlp",
+      "phase": "extract",
+      "result": "metadata_ok",
+      "formats": 6
+    },
+    {
+      "sample": "videopress-official",
+      "path": "stock-yt_dlp",
+      "phase": "download_attempt",
+      "result": "http_429"
+    },
+    {
+      "sample": "un-webtv-public",
+      "path": "stock-yt_dlp",
+      "phase": "extract",
+      "result": "http_404"
+    },
+    {
+      "sample": "bilibili-native",
+      "path": "stock-yt_dlp",
+      "phase": "download",
+      "result": "succeeded",
+      "has_video": true,
+      "has_audio": true,
+      "duration_ms": 12440
+    }
+  ]
+}

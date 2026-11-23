@@ -1,0 +1,30 @@
+services:
+  reelucid:
+    build: .
+    image: ${REELUCID_IMAGE:-reelucid:1.0.1}
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - reelucid-data:/data
+    environment:
+      REELUCID_DATA_DIR: /data
+      TMPDIR: /data/work/tmp
+      REELUCID_OFFLINE: "false"
+      REELUCID_SOURCE_PROXY: ${REELUCID_SOURCE_PROXY:-}
+      REELUCID_MAX_CONCURRENT_JOBS: ${REELUCID_MAX_CONCURRENT_JOBS:-4}
+      REELUCID_ASR_CHUNK_STRATEGY: ${REELUCID_ASR_CHUNK_STRATEGY:-auto}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    stop_grace_period: 45s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    mem_limit: ${REELUCID_MEMORY_LIMIT:-6g}
+    cpus: ${REELUCID_CPU_LIMIT:-4.0}
+volumes:
+  reelucid-data:

@@ -1,0 +1,613 @@
+{
+  "date": "2026-11-20",
+  "image": "reelucid:0.1.0-single",
+  "image_id": "sha256:cffcddadd5fb70f8330acae41fa7e127eb23c88f319b7b3d8f5ccd352d5cddbc",
+  "asr": "faster-whisper tiny (CPU)",
+  "authentication": "No platform account cookies. Instance admin and external resolver service credentials used where required.",
+  "engine": {
+    "version": "2026.10.26",
+    "extractor_count": 1755,
+    "scope": "single_vod_only"
+  },
+  "external_versions": {
+    "dtk": "evil0ctal/douyin_tiktok_download_api:5.1.11",
+    "xhs": "joeanamier/xhs-downloader:2.8@sha256:5878c0972cc1236cd8ac4e069f9202152434d8402df52bf427210229b8a53fb9"
+  },
+  "sample_sources": {
+    "baseline": "final-cases.json",
+    "instagram-interview": "https://www.instagram.com/tv/BkfuX9UB-eK/",
+    "bili-b23-author-demo": "https://b23.tv/8MGtHfQ",
+    "xhs-public-*": "Same public share links as specialized-final.json. Share parameters omitted."
+  },
+  "counts": {
+    "named_platforms": 20,
+    "single_container_platforms_with_success": 4,
+    "platforms_with_success_in_any_tested_mode": 6,
+    "platforms_with_nonempty_transcript_in_any_tested_mode": 5
+  },
+  "successful_platforms": {
+    "single": [
+      "Bilibili",
+      "MangoTV",
+      "TencentVideo",
+      "Twitch"
+    ],
+    "any_tested_mode": [
+      "Bilibili",
+      "Douyin",
+      "MangoTV",
+      "TencentVideo",
+      "Twitch",
+      "Xiaohongshu"
+    ],
+    "nonempty_transcript": [
+      "Bilibili",
+      "Douyin",
+      "TencentVideo",
+      "Twitch",
+      "Xiaohongshu"
+    ]
+  },
+  "cases": [
+    {
+      "sample": "http-jfk",
+      "source": "http_media",
+      "adapter": "http_media",
+      "deployment": "single",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 11000,
+      "segments": 4,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "sample": "http-w3",
+      "source": "http_media",
+      "adapter": "http_media",
+      "deployment": "single",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 10027,
+      "segments": 0,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "sample": "forced-yt-direct",
+      "source": "http_media",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 10027,
+      "segments": 0,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "sample": "ted-1",
+      "source": "TED",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "EXTRACTOR_BROKEN",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "archive-1",
+      "source": "ArchiveOrg",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "NETWORK_POLICY_BLOCKED",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "local-upload",
+      "source": "upload",
+      "adapter": "upload",
+      "deployment": "single",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 7574,
+      "segments": 3,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "sample": "weibo-1",
+      "source": "Weibo",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "EXTRACTOR_BROKEN",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "acfun-1",
+      "source": "AcFun",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "EXTRACTOR_BROKEN",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "youku-1",
+      "source": "Youku-Tudou",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "EXTRACTOR_BROKEN",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "iqiyi-1",
+      "source": "iQiyi",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "EXTRACTOR_BROKEN",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "mgtv-1",
+      "source": "MangoTV",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 30040,
+      "segments": 0,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "sample": "bili-share-av",
+      "source": "Bilibili",
+      "adapter": "bilibili",
+      "deployment": "single",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 97941,
+      "segments": 42,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "sample": "bili-upstream",
+      "source": "Bilibili",
+      "adapter": "bilibili",
+      "deployment": "single",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 90302,
+      "segments": 26,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "sample": "tencent-1",
+      "source": "TencentVideo",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 215958,
+      "segments": 81,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "sample": "bili-b23-author-demo",
+      "source": "Bilibili",
+      "adapter": "bilibili",
+      "deployment": "single",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 98313,
+      "segments": 12,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "sample": "youtube-zoo",
+      "source": "YouTube",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "NETWORK_POLICY_BLOCKED",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "youtube-test",
+      "source": "YouTube",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "NETWORK_POLICY_BLOCKED",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "vimeo-1",
+      "source": "Vimeo",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "NETWORK_POLICY_BLOCKED",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "dailymotion-1",
+      "source": "Dailymotion",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "NETWORK_POLICY_BLOCKED",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "instagram-1",
+      "source": "Instagram",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": true,
+      "error_code": "NO_AUDIO_TRACK",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "reddit-1",
+      "source": "Reddit",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "NETWORK_POLICY_BLOCKED",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "twitter-1",
+      "source": "X-Twitter",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "NETWORK_POLICY_BLOCKED",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "twitch-1",
+      "source": "Twitch",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 32099,
+      "segments": 12,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "sample": "facebook-1",
+      "source": "Facebook",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "NETWORK_POLICY_BLOCKED",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "instagram-interview",
+      "source": "Instagram",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "NETWORK_POLICY_BLOCKED",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "xhs-public-6aa37e990000000012035802",
+      "source": "Xiaohongshu",
+      "adapter": "xhs",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "SOURCE_ACCESS_REQUIRED",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": [],
+      "verified_earlier_on_same_image": true
+    },
+    {
+      "sample": "xhs-public-6a7b81d5000000003203233c",
+      "source": "Xiaohongshu",
+      "adapter": "xhs",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "SOURCE_ACCESS_REQUIRED",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": [],
+      "verified_earlier_on_same_image": true
+    },
+    {
+      "sample": "douyin-1",
+      "source": "Douyin",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "EXTRACTOR_BROKEN",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "douyin-2",
+      "source": "Douyin",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "EXTRACTOR_BROKEN",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "tiktok-1",
+      "source": "TikTok",
+      "adapter": "yt_dlp",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "NETWORK_POLICY_BLOCKED",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "xhs-public-6a7918e1000000002403c179",
+      "source": "Xiaohongshu",
+      "adapter": "xhs",
+      "deployment": "single",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "SOURCE_ACCESS_REQUIRED",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "xhs-public-6a7b81d5000000003203233c",
+      "source": "Xiaohongshu",
+      "adapter": "xhs",
+      "deployment": "external-xhs",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 19134,
+      "segments": 0,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "sample": "xhs-public-6aa37e990000000012035802",
+      "source": "Xiaohongshu",
+      "adapter": "xhs",
+      "deployment": "external-xhs",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 32648,
+      "segments": 2,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "sample": "xhs-public-6a7918e1000000002403c179",
+      "source": "Xiaohongshu",
+      "adapter": "xhs",
+      "deployment": "external-xhs",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 313634,
+      "segments": 148,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "sample": "douyin-1",
+      "source": "Douyin",
+      "adapter": "dtk",
+      "deployment": "external-dtk",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 19782,
+      "segments": 1,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "sample": "douyin-2",
+      "source": "Douyin",
+      "adapter": "dtk",
+      "deployment": "external-dtk",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 42479,
+      "segments": 1,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "sample": "tiktok-1",
+      "source": "TikTok",
+      "adapter": "dtk",
+      "deployment": "external-dtk",
+      "status": "failed",
+      "has_media": false,
+      "error_code": "NETWORK_POLICY_BLOCKED",
+      "duration_ms": null,
+      "segments": null,
+      "verified_artifacts": []
+    },
+    {
+      "sample": "bili-recent",
+      "source": "Bilibili",
+      "adapter": "dtk",
+      "deployment": "external-dtk",
+      "status": "succeeded",
+      "has_media": true,
+      "error_code": null,
+      "duration_ms": 12440,
+      "segments": 0,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    }
+  ],
+  "notes": [
+    "One upload control retained, two files tested via http_media, one of them additionally tested via explicit yt_dlp. These entries are excluded from platform totals.",
+    "Two bundled XHS samples are reused from the same image and date in single-container-20261120.json.",
+    "Four preliminary DTK attempts could not reach the configured host mapping from the temporary test network. The external-dtk cases use the reachable service on its Docker network.",
+    "Tests used disposable API data. Empty transcripts are retained as zero segments."
+  ]
+}

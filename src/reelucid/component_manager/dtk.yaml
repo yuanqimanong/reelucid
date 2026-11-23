@@ -1,0 +1,131 @@
+# Fixed service roles from upstream v5.1.13. Only the API joins Reelucid's network.
+x-labels: &labels {io.reelucid.owner: "${REELUCID_COMPONENT_OWNER:?}"}
+x-env: &app-env
+  DTK_SECRET_KEY: "${REELUCID_DTK_SECRET:?}"
+  DTK_DATABASE_URL: "postgresql+asyncpg://dtk:${REELUCID_DTK_PG:?}@postgres:5432/dtk"
+  DTK_REDIS_URL: "redis://:${REELUCID_DTK_REDIS:?}@redis:6379/0"
+  DTK_DOWNLOADER_TOKEN: "${REELUCID_DTK_DOWNLOADER:?}"
+  DTK_DOWNLOADER_URL: http://downloader:9100
+  DTK_BACKUP_DIR: /var/lib/dtk/backups
+x-app: &app
+  image: evil0ctal/douyin_tiktok_download_api:5.1.13@sha256:c0907e1bf08f4b7eda0a79c8157b29523a0b28f63bb26670bf666f4c88f50c00
+  labels: *labels
+  environment: *app-env
+  volumes: [backup-data:/var/lib/dtk/backups]
+  read_only: true
+  tmpfs: ["/tmp:size=64m,mode=1777"]
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  mem_limit: 512m
+  pids_limit: 256
+x-ready: &ready
+  migrate: {condition: service_completed_successfully}
+  postgres: {condition: service_healthy}
+  redis: {condition: service_healthy}
+services:
+  postgres:
+    image: timescale/timescaledb-ha:pg17@sha256:3f0b3f6bdf4912878444a36e6113a18346309583c4d1a61d81a0c511342a1afd
+    command: [postgres, -c, max_connections=100]
+    labels: *labels
+    environment:
+      POSTGRES_USER: dtk
+      POSTGRES_DB: dtk
+      POSTGRES_PASSWORD: "${REELUCID_DTK_PG:?}"
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+    volumes: [postgres-data:/home/postgres/pgdata/data]
+    networks: [data]
+    healthcheck:
+      test: [CMD, pg_isready, -U, dtk, -d, dtk]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    stop_grace_period: 1m
+    mem_limit: 2g
+  redis:
+    image: redis:8-alpine@sha256:71885d8cc6e42f2bc0aa2eb853bfc4be200b5108a46ac50e117ae1df0531fb80
+    labels: *labels
+    user: redis
+    environment: {REDIS_PASSWORD: "${REELUCID_DTK_REDIS:?}"}
+    command: [sh, -ec, 'exec redis-server --requirepass "$$REDIS_PASSWORD" --appendonly yes --maxmemory 320mb --maxmemory-policy volatile-lru']
+    volumes: [redis-data:/data]
+    networks: [data]
+    healthcheck:
+      test: [CMD-SHELL, 'REDISCLI_AUTH="$$REDIS_PASSWORD" redis-cli ping | grep -q PONG']
+      interval: 10s
+      timeout: 5s
+      retries: 8
+    restart: unless-stopped
+    mem_limit: 512m
+  migrate:
+    <<: *app
+    command: [migrate]
+    networks: [data]
+    depends_on:
+      postgres: {condition: service_healthy}
+    restart: "no"
+  api:
+    <<: *app
+    command: [api]
+    environment:
+      <<: *app-env
+      DTK_BIND_HOST: 0.0.0.0
+      DTK_BIND_PORT: "8000"
+      DTK_CONSOLE_DIR: /app/web/dist
+      DTK_MEDIA_DIR: /var/lib/dtk/media
+    volumes:
+      - backup-data:/var/lib/dtk/backups
+      - media-data:/var/lib/dtk/media:ro
+    ports: ["127.0.0.1:${REELUCID_COMPONENT_PORT:?}:8000"]
+    networks:
+      data: {}
+      edge: {}
+      core: {aliases: [reelucid-managed-dtk]}
+    depends_on: *ready
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/readyz', timeout=3).close()"]
+      interval: 10s
+      timeout: 5s
+      start_period: 40s
+      retries: 8
+    restart: unless-stopped
+  worker:
+    <<: *app
+    command: [worker]
+    networks: [data, edge]
+    depends_on: *ready
+    healthcheck:
+      test: [CMD, python, -c, "import socket; socket.create_connection(('redis',6379),3).close()"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    stop_grace_period: 45s
+    restart: unless-stopped
+  downloader:
+    image: evil0ctal/douyin_tiktok_download_api-downloader:5.1.13@sha256:50cdf3b4ff6d3238b48a8112c4f74cb6804c992632533ba35f27b4574a62fee4
+    labels: *labels
+    environment:
+      DTK_DOWNLOADER_TOKEN: "${REELUCID_DTK_DOWNLOADER:?}"
+      DTK_DOWNLOADER_BIND: 0.0.0.0:9100
+      DTK_DOWNLOADER_ROOT: /var/lib/dtk/media
+    networks: [edge]
+    volumes: [media-data:/var/lib/dtk/media]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: [CMD, /usr/local/bin/downloader, healthcheck]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    mem_limit: 512m
+    restart: unless-stopped
+networks:
+  data: {internal: true}
+  edge: {}
+  core: {external: true, name: "${REELUCID_COMPONENT_NETWORK:?}"}
+volumes:
+  postgres-data: {}
+  redis-data: {}
+  backup-data: {}
+  media-data: {}

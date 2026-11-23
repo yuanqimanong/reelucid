@@ -1,0 +1,110 @@
+{
+  "date": "2026-11-23",
+  "image": "reelucid:0.1.0-egress",
+  "image_id": "sha256:68cacbd3d82bebdbdeb2e7d2ea3daf119711d9108aa9e134cb9bca322f6fcee2",
+  "asr": "faster-whisper tiny CPU",
+  "cases": [
+    {
+      "id": "tiktok-1",
+      "mode": "direct",
+      "source_proxy_enabled": false,
+      "status": "failed",
+      "download_completed": false,
+      "has_audio": null,
+      "has_video": null,
+      "duration_ms": null,
+      "segments": null,
+      "error_code": "NETWORK_POLICY_BLOCKED",
+      "verified_artifacts": []
+    },
+    {
+      "id": "bilibili-explicit-yt_dlp",
+      "mode": "direct",
+      "source_proxy_enabled": false,
+      "status": "succeeded",
+      "download_completed": true,
+      "has_audio": true,
+      "has_video": true,
+      "duration_ms": 12440,
+      "segments": 0,
+      "error_code": null,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "id": "http-jfk",
+      "mode": "direct",
+      "source_proxy_enabled": false,
+      "status": "succeeded",
+      "download_completed": true,
+      "has_audio": true,
+      "has_video": false,
+      "duration_ms": 11000,
+      "segments": 4,
+      "error_code": null,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "id": "tiktok-1",
+      "mode": "proxy",
+      "source_proxy_enabled": true,
+      "status": "failed",
+      "download_completed": false,
+      "has_audio": null,
+      "has_video": null,
+      "duration_ms": null,
+      "segments": null,
+      "error_code": "INVALID_SOURCE_RESPONSE",
+      "verified_artifacts": []
+    },
+    {
+      "id": "instagram-1",
+      "mode": "proxy",
+      "source_proxy_enabled": true,
+      "status": "failed",
+      "download_completed": true,
+      "has_audio": null,
+      "has_video": null,
+      "duration_ms": null,
+      "segments": null,
+      "error_code": "NO_AUDIO_TRACK",
+      "verified_artifacts": []
+    },
+    {
+      "id": "http-jfk",
+      "mode": "proxy-smoke",
+      "source_proxy_enabled": true,
+      "status": "succeeded",
+      "download_completed": true,
+      "has_audio": true,
+      "has_video": false,
+      "duration_ms": 11000,
+      "segments": 4,
+      "error_code": null,
+      "verified_artifacts": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    }
+  ],
+  "diagnostic": {
+    "tiktok_stock_container_through_clash": "unexpected webpage; zero formats",
+    "tiktok_stock_windows_through_clash": "downloaded AAC",
+    "older_tiktok_audio_upload_segments": 6
+  },
+  "isolated_containers_removed": true
+}

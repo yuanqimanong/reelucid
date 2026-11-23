@@ -1,0 +1,396 @@
+{
+  "started_at": "2026-11-11T14:10:41.782256+00:00",
+  "authentication": "public content; no user login/Cookie; DTK minted guest identity; local API authenticated",
+  "cases": [
+    {
+      "id": "xhs-public-6a7b81d5000000003203233c",
+      "platform": "Xiaohongshu",
+      "url": "https://www.xiaohongshu.com/explore/6a7b81d5000000003203233c",
+      "adapter_id": "xhs",
+      "started_at": "2026-11-11T14:10:42.506532+00:00",
+      "job_id": "job_0a42442035c6410dba8563f96544234d",
+      "status": "succeeded",
+      "stage": "completed",
+      "error": null,
+      "elapsed_seconds": 9.7,
+      "download_completed": true,
+      "media": {
+        "duration_ms": 19134,
+        "has_audio": true,
+        "has_video": true,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.0
+      },
+      "artifacts": [
+        {
+          "artifact_id": "art_036e44f6b3d848669f7c29bb3ce10ef4",
+          "format": "json",
+          "sha256": "123c38bbc9b4e7d420fa4e2db974103ee7d3043482755855bcede59de2d1eb2f",
+          "size_bytes": 218
+        },
+        {
+          "artifact_id": "art_464e8248cc6f4f5a865961c2132cb291",
+          "format": "srt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "artifact_id": "art_c1418450d51a4f838444f25d6aec25a3",
+          "format": "vtt",
+          "sha256": "8eb5aec53542eaedb7502b22fb677161abba1e265b1338f1af1369a1f689837c",
+          "size_bytes": 8
+        },
+        {
+          "artifact_id": "art_3fdf67d457c2496db9a411ec3e350151",
+          "format": "txt",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+          "size_bytes": 1
+        },
+        {
+          "artifact_id": "art_e05d1b5798cd474893ab2069641d092b",
+          "format": "json",
+          "sha256": "8b67272adcc346887889b3655ea2c9e3a966ac19d34d6c491e714011f6fed6de",
+          "size_bytes": 1911
+        }
+      ],
+      "segment_count": 0,
+      "duration_ms": 19134,
+      "warnings": [
+        "no_speech"
+      ],
+      "share_token_redacted": true
+    },
+    {
+      "id": "xhs-public-6a7918e1000000002403c179",
+      "platform": "Xiaohongshu",
+      "url": "https://www.xiaohongshu.com/explore/6a7918e1000000002403c179",
+      "adapter_id": "xhs",
+      "started_at": "2026-11-11T14:10:52.215133+00:00",
+      "job_id": "job_b3ac24d3d0bd42b38b3dffd29775eb91",
+      "status": "succeeded",
+      "stage": "completed",
+      "error": null,
+      "elapsed_seconds": 203.56,
+      "download_completed": true,
+      "media": {
+        "duration_ms": 313634,
+        "has_audio": true,
+        "has_video": true,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.0
+      },
+      "artifacts": [
+        {
+          "artifact_id": "art_e8ffc52766344ebc86687327f9a4cd79",
+          "format": "json",
+          "sha256": "b47727b482f0ec5555056cf9eb31ad7dcd86af98473999d2a37aaf22a6a4438e",
+          "size_bytes": 210844
+        },
+        {
+          "artifact_id": "art_f24ff0d7b45b4834b1434dc7770ae0b1",
+          "format": "srt",
+          "sha256": "5975468921f01c4115c8db24c2cd50cd93d6177b06ed6c25ac54d42742399a10",
+          "size_bytes": 12064
+        },
+        {
+          "artifact_id": "art_13bad1dde7b546f39980b127e732bd66",
+          "format": "vtt",
+          "sha256": "6c7ddaa4361026959fd7acdab4c5ab08b9d24d9666d5be65f79b7c2967e72eb3",
+          "size_bytes": 12072
+        },
+        {
+          "artifact_id": "art_c290124839ed41b5a3df7d9049e922db",
+          "format": "txt",
+          "sha256": "5fdbf00bae511cfdf55f159818e49d5d258ad30e5c426ccd5691b09302461502",
+          "size_bytes": 7098
+        },
+        {
+          "artifact_id": "art_0862520b5f614659a9a1f69ceed15766",
+          "format": "json",
+          "sha256": "c077461263ffde94309dc44ac3ad69c062828e9247caa2f418fc460f410e5463",
+          "size_bytes": 232176
+        }
+      ],
+      "segment_count": 145,
+      "duration_ms": 313634,
+      "warnings": [
+        "needs_review"
+      ],
+      "share_token_redacted": true
+    },
+    {
+      "id": "xhs-public-6aa37e990000000012035802",
+      "platform": "Xiaohongshu",
+      "url": "https://www.xiaohongshu.com/explore/6aa37e990000000012035802",
+      "adapter_id": "xhs",
+      "started_at": "2026-11-11T14:14:15.791278+00:00",
+      "job_id": "job_a614d41b0f544a72b467055c7e5a5e63",
+      "status": "succeeded",
+      "stage": "completed",
+      "error": null,
+      "elapsed_seconds": 12.24,
+      "download_completed": true,
+      "media": {
+        "duration_ms": 32648,
+        "has_audio": true,
+        "has_video": true,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.0
+      },
+      "artifacts": [
+        {
+          "artifact_id": "art_b051dda77ace48028302665ef3787491",
+          "format": "json",
+          "sha256": "b69636e71875accc2155959db4753bfebb39788d71cd0b207950f53b144b91ee",
+          "size_bytes": 2648
+        },
+        {
+          "artifact_id": "art_4a7fe3f87cce4c6d8d357a3f0d5f648a",
+          "format": "srt",
+          "sha256": "786988e2c513e5846ebe4c34386e979d1148a4ae2d6828cc1f4b3e7e64a8606f",
+          "size_bytes": 179
+        },
+        {
+          "artifact_id": "art_cbb751941f8d4efe881efc7f2d1e63b4",
+          "format": "vtt",
+          "sha256": "274878d00014ae103be7b903a34892ba2126f129c001545a521e56e4a0aa94d4",
+          "size_bytes": 187
+        },
+        {
+          "artifact_id": "art_81cd00f584cc4320918c61cdc8262daa",
+          "format": "txt",
+          "sha256": "3e4175a9967b9a2f056f85806b89b65d62b6dc9e7dade3c6cc9c19836b1c4d92",
+          "size_bytes": 114
+        },
+        {
+          "artifact_id": "art_4fff403866b146fe9f6dcd503bc0540b",
+          "format": "json",
+          "sha256": "ea43f87080b7480f0e0f25dcaef609cdbdad5b9416294437539e4eced2af0e84",
+          "size_bytes": 4577
+        }
+      ],
+      "segment_count": 2,
+      "duration_ms": 32648,
+      "warnings": [
+        "needs_review"
+      ],
+      "share_token_redacted": true
+    },
+    {
+      "id": "douyin-1",
+      "platform": "Douyin",
+      "url": "https://www.douyin.com/video/6961737553342991651",
+      "adapter_id": "dtk",
+      "started_at": "2026-11-11T14:14:28.035664+00:00",
+      "job_id": "job_1d861d0c9cc3491bae95cfdc134cd06e",
+      "status": "succeeded",
+      "stage": "completed",
+      "error": null,
+      "elapsed_seconds": 2.55,
+      "download_completed": true,
+      "media": {
+        "duration_ms": 19782,
+        "has_audio": true,
+        "has_video": true,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.0
+      },
+      "artifacts": [
+        {
+          "artifact_id": "art_7b45f3ab6b7445e6a6230c207f810402",
+          "format": "json",
+          "sha256": "fc8ca741a2f6a5e12ea6677729497b7b9089e74a164c4cce3fd3b9f4b8cec25a",
+          "size_bytes": 934
+        },
+        {
+          "artifact_id": "art_28372ce8654d4738a322fc7950fb63ff",
+          "format": "srt",
+          "sha256": "42124e451df3b654ad8eff7ab8f0c9b66abe7f77a469408eea357a83be14f56b",
+          "size_bytes": 48
+        },
+        {
+          "artifact_id": "art_ccd12e7f2c794fb3be42d22ee25465fa",
+          "format": "vtt",
+          "sha256": "0d14ba8dc39787dd7918ad8efe73a7049555489bbc8778898b2ee5d7593932f1",
+          "size_bytes": 56
+        },
+        {
+          "artifact_id": "art_ea1385c5efe54608a162ac0acc72591d",
+          "format": "txt",
+          "sha256": "f974236a222da8e4b94b935b1fd2536126c9f297e0477ab188914dcdf2ba9bdd",
+          "size_bytes": 16
+        },
+        {
+          "artifact_id": "art_a85f612e11b64b0f8ed3289f31d22974",
+          "format": "json",
+          "sha256": "b19be34b518b8f3909426d235cbb1f595eb63dc8b13d8de0883e54b276f01523",
+          "size_bytes": 2681
+        }
+      ],
+      "segment_count": 1,
+      "duration_ms": 19782,
+      "warnings": [],
+      "share_token_redacted": false
+    },
+    {
+      "id": "douyin-2",
+      "platform": "Douyin",
+      "url": "https://www.douyin.com/video/6982497745948921092",
+      "adapter_id": "dtk",
+      "started_at": "2026-11-11T14:14:30.591056+00:00",
+      "job_id": "job_f00c8ae844c34f35a6072158b57cc33d",
+      "status": "succeeded",
+      "stage": "completed",
+      "error": null,
+      "elapsed_seconds": 2.54,
+      "download_completed": true,
+      "media": {
+        "duration_ms": 42479,
+        "has_audio": true,
+        "has_video": true,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.0
+      },
+      "artifacts": [
+        {
+          "artifact_id": "art_b35bccb8326849f9a12849d4bceef42c",
+          "format": "json",
+          "sha256": "c126f4d92f9c7bc61d254f42fbcce18464b4b146f63101557dcf98157e218aac",
+          "size_bytes": 641
+        },
+        {
+          "artifact_id": "art_40d4c897237547788f2ab99d0f9a04ad",
+          "format": "srt",
+          "sha256": "cb2ae420b0077b3691560ea422ed63e859c5840c18cb281774f5bf13b071cdb6",
+          "size_bytes": 43
+        },
+        {
+          "artifact_id": "art_b22cd2a75e734f68b2157c9421a5a328",
+          "format": "vtt",
+          "sha256": "8e4b2102526542ad41cf09c8f0819b5b67a89d78b8f1a4d816b93d2ccb7e75a6",
+          "size_bytes": 51
+        },
+        {
+          "artifact_id": "art_33f9481b2aa84cd7abd5d10681b8087e",
+          "format": "txt",
+          "sha256": "e84dd29315cc8be0fece5102da6b5d1f87145be474caa94644d017f45e9da67c",
+          "size_bytes": 11
+        },
+        {
+          "artifact_id": "art_ca4ae5a2bb7245a6822456452c59235f",
+          "format": "json",
+          "sha256": "cb0cd165c49b9b0e8f968a4edc4610d5e1dceb9d3e1204f1c24b92f1d8fcb6d6",
+          "size_bytes": 2358
+        }
+      ],
+      "segment_count": 1,
+      "duration_ms": 42479,
+      "warnings": [],
+      "share_token_redacted": false
+    },
+    {
+      "id": "tiktok-1",
+      "platform": "TikTok",
+      "url": "https://www.tiktok.com/@patroxofficial/video/6742501081818877190",
+      "adapter_id": "dtk",
+      "started_at": "2026-11-11T14:14:33.141765+00:00",
+      "job_id": "job_1c2658209f7c4dcaaa71f2f03e9ad78d",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "SOURCE_ACCESS_REQUIRED",
+        "message": "平台解析失败，请检查解析服务的身份池、登录态和网络。",
+        "retryable": true
+      },
+      "elapsed_seconds": 10.62,
+      "download_completed": false,
+      "media": {},
+      "artifacts": [],
+      "share_token_redacted": false
+    }
+  ],
+  "capabilities": {
+    "version": "0.1.0",
+    "asr": [
+      {
+        "id": "tiny",
+        "engine": "faster_whisper",
+        "state": "ready"
+      },
+      {
+        "id": "base",
+        "engine": "faster_whisper",
+        "state": "not_installed"
+      },
+      {
+        "id": "small",
+        "engine": "faster_whisper",
+        "state": "not_installed"
+      },
+      {
+        "id": "medium",
+        "engine": "faster_whisper",
+        "state": "not_installed"
+      },
+      {
+        "id": "large-v3",
+        "engine": "faster_whisper",
+        "state": "not_installed"
+      },
+      {
+        "id": "large-v3-turbo",
+        "engine": "faster_whisper",
+        "state": "not_installed"
+      }
+    ],
+    "adapters": {
+      "bilibili": true,
+      "dtk": true,
+      "xhs": true,
+      "upload": true,
+      "http_media": true,
+      "yt_dlp": true
+    },
+    "available_adapters": [
+      "http_media",
+      "yt_dlp",
+      "bilibili",
+      "dtk",
+      "xhs"
+    ],
+    "source_resolver": {
+      "adapter_id": "dtk",
+      "configured": true,
+      "enabled": true
+    },
+    "xhs_resolver": {
+      "adapter_id": "xhs",
+      "configured": true,
+      "enabled": true
+    },
+    "source_catalogue_url": "/api/v1/source-platforms",
+    "operations": [
+      "transcribe",
+      "summarize",
+      "translate",
+      "extract",
+      "qa"
+    ],
+    "visual": false,
+    "offline": false,
+    "max_upload_bytes": 2147483648
+  },
+  "source_engine": {
+    "engine": "yt-dlp",
+    "version": "2026.10.26",
+    "extractor_count": 1755,
+    "scope": "single_vod_only"
+  },
+  "finished_at": "2026-11-11T14:14:43.769878+00:00",
+  "deployment_image_id": "sha256:333d23c0c30948b25e7ac99989a83f37bd7c2e0298d4ef75a35c6aa77dff4a4c"
+}

@@ -1,0 +1,111 @@
+{
+  "name": "reelucid-acceptance-8f2dc8e63c9f",
+  "tag": "reelucid:0.1.0-single",
+  "cases": [
+    {
+      "label": "local-upload",
+      "status": "succeeded",
+      "stages_sampled": [
+        "queued",
+        "load_model",
+        "inspect",
+        "asr",
+        "completed"
+      ],
+      "duration_seconds": 4.63,
+      "has_source": true,
+      "error_code": null,
+      "media": {
+        "duration_ms": 7574,
+        "has_audio": true,
+        "has_video": true,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.0
+      },
+      "segments": 3,
+      "audio_duration_ms": 7574,
+      "hash_verified": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "label": "bilibili-BV13Ha86pELF",
+      "status": "succeeded",
+      "stages_sampled": [
+        "queued",
+        "acquire",
+        "completed"
+      ],
+      "duration_seconds": 7.3,
+      "has_source": true,
+      "error_code": null,
+      "media": {
+        "duration_ms": 12440,
+        "has_audio": true,
+        "has_video": true,
+        "format_name": "matroska,webm",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.0
+      },
+      "segments": 0,
+      "audio_duration_ms": 12440,
+      "hash_verified": [
+        "transcript.json",
+        "subtitle.srt",
+        "subtitle.vtt",
+        "document.txt",
+        "manifest.json"
+      ]
+    },
+    {
+      "label": "xhs-public-6aa37e990000000012035802",
+      "status": "failed",
+      "stages_sampled": [
+        "queued",
+        "acquire"
+      ],
+      "duration_seconds": 0.82,
+      "has_source": false,
+      "error_code": "SOURCE_ACCESS_REQUIRED",
+      "media": {}
+    },
+    {
+      "label": "xhs-public-6a7b81d5000000003203233c",
+      "status": "failed",
+      "stages_sampled": [
+        "queued",
+        "acquire"
+      ],
+      "duration_seconds": 0.82,
+      "has_source": false,
+      "error_code": "SOURCE_ACCESS_REQUIRED",
+      "media": {}
+    }
+  ],
+  "image_id": "sha256:cffcddadd5fb70f8330acae41fa7e127eb23c88f319b7b3d8f5ccd352d5cddbc",
+  "uid": "10001",
+  "rootfs_readonly": "true",
+  "networks": [
+    "bridge"
+  ],
+  "offline_parser": "passed",
+  "web_root": 200,
+  "xhs": {
+    "adapter_id": "xhs",
+    "mode": "local",
+    "local_available": true,
+    "configured": true,
+    "enabled": true
+  },
+  "dtk": {
+    "adapter_id": "dtk",
+    "configured": false,
+    "enabled": true
+  },
+  "removed_disposable_container": true
+}

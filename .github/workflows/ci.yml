@@ -1,0 +1,58 @@
+name: checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.13.9"
+          enable-cache: true
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: uv sync --locked --extra server
+      - run: uv lock --check
+      - run: uv run --locked --extra server ruff check src tests
+      - run: uv run --locked --extra server ruff format --check src tests
+      - run: uv run --locked --extra server pyright
+      - run: uv run --locked --extra server pytest -m 'not model and not network and not gpu and not slow'
+      - name: Export OpenAPI
+        run: |
+          uv run --locked --extra server python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from reelucid.api import create_app
+
+          schema = json.dumps(create_app().openapi(), ensure_ascii=False, indent=2)
+          Path("docs/openapi.json").write_text(schema + "\n", encoding="utf-8", newline="\n")
+          PY
+      - run: git diff --exit-code -- docs/openapi.json
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24.22.3"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

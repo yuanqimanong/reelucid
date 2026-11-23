@@ -1,0 +1,834 @@
+{
+  "started_at": "2026-11-11T12:35:52.443079+00:00",
+  "authentication": "anonymous upstream; local API admin token",
+  "cases": [
+    {
+      "id": "upload",
+      "platform": "upload",
+      "file": ".cache/fixtures/source-speech.mp4",
+      "started_at": "2026-11-11T12:35:52.755259+00:00",
+      "job_id": "job_8df5f34cb95b4f64b911d5d0b5bca35b",
+      "status": "succeeded",
+      "stage": "completed",
+      "error": null,
+      "elapsed_seconds": 11.94,
+      "download_completed": true,
+      "media": {
+        "duration_ms": 7574,
+        "has_audio": true,
+        "has_video": true,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.0
+      },
+      "artifacts": [
+        {
+          "artifact_id": "art_a340a60bca6e465a99e82b01cc13e258",
+          "format": "json",
+          "sha256": "836046a1d48e93bc8b1fb114c782c7425c3ffc4478800223e35c0900188c87f0",
+          "size_bytes": 2478
+        },
+        {
+          "artifact_id": "art_771bdf6de15441a0b2f506b1898dd96b",
+          "format": "srt",
+          "sha256": "fce5d58bc12fa9b405a7d96c383844b68f698694dac1d48ee16da8f9d187dc5b",
+          "size_bytes": 184
+        },
+        {
+          "artifact_id": "art_a8b04818517644cea999047b91cdcf68",
+          "format": "vtt",
+          "sha256": "30b066d81ee3fdd2c77ba01abe268e1d076d64d25924b1bf874772bd9e8dc778",
+          "size_bytes": 192
+        },
+        {
+          "artifact_id": "art_f0e819c5e991444895413889ca5d1509",
+          "format": "txt",
+          "sha256": "e35c2c3fa3a7734a67dd914770e5f9192248400dd45599a50748edae74e425fd",
+          "size_bytes": 86
+        },
+        {
+          "artifact_id": "art_3b3fccb1576a4668b5e89c6d7a0e18d6",
+          "format": "json",
+          "sha256": "a5ceeb61b2fe9ac607ba65303c6dac29f8736391ba0fdf31c2583b483e1bd6dd",
+          "size_bytes": 4372
+        }
+      ],
+      "segment_count": 3,
+      "duration_ms": 7574,
+      "warnings": []
+    },
+    {
+      "id": "http-w3",
+      "platform": "http_media",
+      "url": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "adapter_id": "http_media",
+      "started_at": "2026-11-11T12:36:04.710796+00:00",
+      "job_id": "job_253b940c8de34e34b679b1e4e74dfbe9",
+      "status": "succeeded",
+      "stage": "completed",
+      "error": null,
+      "elapsed_seconds": 3.59,
+      "download_completed": true,
+      "media": {
+        "duration_ms": 10027,
+        "has_audio": true,
+        "has_video": true,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.0
+      },
+      "artifacts": [
+        {
+          "artifact_id": "art_03bc06d3f54a4b3499b108f606093084",
+          "format": "json",
+          "sha256": "4fec8b40ecc5f39375d590647d9094ac2aefa6b49881c87c50d8fbaea4f87f1e",
+          "size_bytes": 220
+        },
+        {
+          "artifact_id": "art_bcf63288b145435b9a53fcfe80be0660",
+          "format": "srt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "artifact_id": "art_a215d2054caa4862b7ccf883499b607c",
+          "format": "vtt",
+          "sha256": "8eb5aec53542eaedb7502b22fb677161abba1e265b1338f1af1369a1f689837c",
+          "size_bytes": 8
+        },
+        {
+          "artifact_id": "art_66ce23bfd3604e5bbc3444ac44f51b64",
+          "format": "txt",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+          "size_bytes": 1
+        },
+        {
+          "artifact_id": "art_6221731b0f284beebb746bb7b5e8f21e",
+          "format": "json",
+          "sha256": "8f51da4a1f59ba0071fbe0719de500f9c3e777aa9c142baee564cbc8298cd2aa",
+          "size_bytes": 1913
+        }
+      ],
+      "segment_count": 0,
+      "duration_ms": 10027,
+      "warnings": [
+        "no_speech"
+      ]
+    },
+    {
+      "id": "http-jfk",
+      "platform": "http_media",
+      "url": "https://raw.githubusercontent.com/openai/whisper/main/tests/jfk.flac",
+      "adapter_id": "http_media",
+      "started_at": "2026-11-11T12:36:08.323559+00:00",
+      "job_id": "job_7882541f5449459ea92cfe1d12854619",
+      "status": "succeeded",
+      "stage": "completed",
+      "error": null,
+      "elapsed_seconds": 13.48,
+      "download_completed": true,
+      "media": {
+        "duration_ms": 11000,
+        "has_audio": true,
+        "has_video": false,
+        "format_name": "flac",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.0
+      },
+      "artifacts": [
+        {
+          "artifact_id": "art_ed88b390e22a4d63879686c9972ad9fa",
+          "format": "json",
+          "sha256": "6c28a39463f5c9a303c34be03c7121751d8b0901df42e61d8c5e4ace37186b3d",
+          "size_bytes": 3638
+        },
+        {
+          "artifact_id": "art_663e60ac0fe44bc6a33d4dc281692611",
+          "format": "srt",
+          "sha256": "dd5b64d8a96504f412cc5a933aa1e7d3824c0462e3d9d8113e7419f4c43317e1",
+          "size_bytes": 247
+        },
+        {
+          "artifact_id": "art_1fcc6631b35a4209850b7d1fcec5a127",
+          "format": "vtt",
+          "sha256": "7ad580185566f0875c2a0844d48e3e2941b14a4f75ea669bd2aebee8d6808b21",
+          "size_bytes": 255
+        },
+        {
+          "artifact_id": "art_90d5f07e67d2409daaf0ac7c8b111e10",
+          "format": "txt",
+          "sha256": "9dad65271e1f2331f288bb4ec1b5ba39ea43ec1de0fbddb9e146238b7d95177d",
+          "size_bytes": 116
+        },
+        {
+          "artifact_id": "art_19015519042f4b8fa69f728f944d8566",
+          "format": "json",
+          "sha256": "4ac93eb53b56789afa78c7ee4bd7779fb6905da1b7b86d49ce47c2be7561f016",
+          "size_bytes": 5646
+        }
+      ],
+      "segment_count": 4,
+      "duration_ms": 11000,
+      "warnings": []
+    },
+    {
+      "id": "youtube-zoo",
+      "platform": "YouTube",
+      "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
+      "started_at": "2026-11-11T12:36:21.818615+00:00",
+      "job_id": "job_5da8fa8e74754086abfda9531b8a6045",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "INTERNAL_ERROR",
+        "message": "处理失败，请查看服务端诊断。",
+        "retryable": true
+      },
+      "elapsed_seconds": 1.15,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "youtube-test",
+      "platform": "YouTube",
+      "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+      "started_at": "2026-11-11T12:36:22.980984+00:00",
+      "job_id": "job_f07e828144a34bc081a19ff5c202df7f",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "INTERNAL_ERROR",
+        "message": "处理失败，请查看服务端诊断。",
+        "retryable": true
+      },
+      "elapsed_seconds": 0.52,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "bili-upstream",
+      "platform": "Bilibili",
+      "url": "https://www.bilibili.com/video/BV1bK411W797?p=1",
+      "started_at": "2026-11-11T12:36:23.513369+00:00",
+      "job_id": "job_2744533941484d8bb0cfdd972d5a890f",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "EXTRACTOR_BROKEN",
+        "message": "站点下载失败，可能需要登录态、JS runtime 或平台适配更新。",
+        "retryable": true
+      },
+      "elapsed_seconds": 1.55,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "bili-recent",
+      "platform": "Bilibili",
+      "url": "https://www.bilibili.com/video/BV13Ha86pELF/",
+      "started_at": "2026-11-11T12:36:25.065724+00:00",
+      "job_id": "job_cbb3d7c39d404e6a8aecc3282956a1a1",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "EXTRACTOR_BROKEN",
+        "message": "站点下载失败，可能需要登录态、JS runtime 或平台适配更新。",
+        "retryable": true
+      },
+      "elapsed_seconds": 1.04,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "douyin-1",
+      "platform": "Douyin",
+      "url": "https://www.douyin.com/video/6961737553342991651",
+      "started_at": "2026-11-11T12:36:26.111748+00:00",
+      "job_id": "job_59a37b3e3a44409681d5192aad43afd5",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "EXTRACTOR_BROKEN",
+        "message": "站点下载失败，可能需要登录态、JS runtime 或平台适配更新。",
+        "retryable": true
+      },
+      "elapsed_seconds": 0.53,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "douyin-2",
+      "platform": "Douyin",
+      "url": "https://www.douyin.com/video/6982497745948921092",
+      "started_at": "2026-11-11T12:36:26.648414+00:00",
+      "job_id": "job_faf7896f8c77449ca09d971e41098b1c",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "EXTRACTOR_BROKEN",
+        "message": "站点下载失败，可能需要登录态、JS runtime 或平台适配更新。",
+        "retryable": true
+      },
+      "elapsed_seconds": 0.53,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "tiktok-1",
+      "platform": "TikTok",
+      "url": "https://www.tiktok.com/@patroxofficial/video/6742501081818877190",
+      "started_at": "2026-11-11T12:36:27.183280+00:00",
+      "job_id": "job_e65d812c0f95409187c963a0cae51ff9",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "INTERNAL_ERROR",
+        "message": "处理失败，请查看服务端诊断。",
+        "retryable": true
+      },
+      "elapsed_seconds": 1.04,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "rednote-1",
+      "platform": "Xiaohongshu",
+      "url": "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9",
+      "started_at": "2026-11-11T12:36:28.226773+00:00",
+      "job_id": "job_ac98e1148f334babb9098993bf4b2cca",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "EXTRACTOR_BROKEN",
+        "message": "站点下载失败，可能需要登录态、JS runtime 或平台适配更新。",
+        "retryable": true
+      },
+      "elapsed_seconds": 1.04,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "weibo-1",
+      "platform": "Weibo",
+      "url": "https://m.weibo.cn/status/4189191225395228",
+      "started_at": "2026-11-11T12:36:29.273646+00:00",
+      "job_id": "job_de5f31826b014d2c846c00ea08e37b0f",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "EXTRACTOR_BROKEN",
+        "message": "站点下载失败，可能需要登录态、JS runtime 或平台适配更新。",
+        "retryable": true
+      },
+      "elapsed_seconds": 1.04,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "vimeo-1",
+      "platform": "Vimeo",
+      "url": "https://vimeo.com/76979871",
+      "started_at": "2026-11-11T12:36:30.323014+00:00",
+      "job_id": "job_35103efdc596474e9c3cf4c3f4ba2d94",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "INTERNAL_ERROR",
+        "message": "处理失败，请查看服务端诊断。",
+        "retryable": true
+      },
+      "elapsed_seconds": 0.52,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "dailymotion-1",
+      "platform": "Dailymotion",
+      "url": "https://www.dailymotion.com/video/x5kesuj",
+      "timeout_seconds": 300,
+      "started_at": "2026-11-11T12:36:30.852749+00:00",
+      "job_id": "job_0aa8ab1af84141e1b8bcd31b43fbb861",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "EXTRACTOR_BROKEN",
+        "message": "站点下载失败，可能需要登录态、JS runtime 或平台适配更新。",
+        "retryable": true
+      },
+      "elapsed_seconds": 9.67,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "instagram-1",
+      "platform": "Instagram",
+      "url": "https://www.instagram.com/reel/Chunk8-jurw/",
+      "started_at": "2026-11-11T12:36:40.536576+00:00",
+      "job_id": "job_93323b7764af47529389ec84983e9492",
+      "status": "failed",
+      "stage": "inspect",
+      "error": {
+        "code": "NO_AUDIO_TRACK",
+        "message": "媒体没有音轨，不能执行语音转录。",
+        "retryable": false
+      },
+      "elapsed_seconds": 8.66,
+      "download_completed": true,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "reddit-1",
+      "platform": "Reddit",
+      "url": "https://www.reddit.com/r/aww/comments/90bu6w/heat_index_was_110_degrees_so_we_offered_him_a/",
+      "started_at": "2026-11-11T12:36:49.207642+00:00",
+      "job_id": "job_b28bb7866c3549cfb1d4f69f73f35993",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "INTERNAL_ERROR",
+        "message": "处理失败，请查看服务端诊断。",
+        "retryable": true
+      },
+      "elapsed_seconds": 0.53,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "twitter-1",
+      "platform": "X-Twitter",
+      "url": "https://twitter.com/captainamerica/status/719944021058060289",
+      "started_at": "2026-11-11T12:36:49.746771+00:00",
+      "job_id": "job_a2c084491f6d4c56ab1e454c4fa5cbdf",
+      "status": "succeeded",
+      "stage": "completed",
+      "error": null,
+      "elapsed_seconds": 9.18,
+      "download_completed": true,
+      "media": {
+        "duration_ms": 3179,
+        "has_audio": true,
+        "has_video": true,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.0
+      },
+      "artifacts": [
+        {
+          "artifact_id": "art_af8a1926fbc8440bb464bffd7cb76332",
+          "format": "json",
+          "sha256": "d27d0577f9a9c21ed0631dc1c7d854693493be2669d4573f38efcc8ea3728e70",
+          "size_bytes": 1170
+        },
+        {
+          "artifact_id": "art_6d5e3609237849f4b23edf1d37cb8549",
+          "format": "srt",
+          "sha256": "5f07256456633432ad03b9e2c0efd5da9b5d424b3fc4398b6d2bcc94e7165e17",
+          "size_bytes": 69
+        },
+        {
+          "artifact_id": "art_6b0e0f40c268488e893872a5f1b58c7c",
+          "format": "vtt",
+          "sha256": "1f221862bb5c8908d1ecaea8cd24188ebf5e649dedb74293162df510134bab6e",
+          "size_bytes": 77
+        },
+        {
+          "artifact_id": "art_21f167ca29194e509bb8ea9aa28e0021",
+          "format": "txt",
+          "sha256": "ba183baa03c68e8002498c2be02886b0667be0912cf9e0c691cba877d89fe71b",
+          "size_bytes": 37
+        },
+        {
+          "artifact_id": "art_36c70e2cd2354d0e91beb00590e45822",
+          "format": "json",
+          "sha256": "b25d3838943387cc1ef3f500bcecde91edb0e9c5a8b5d750c0865bbf6b870d6d",
+          "size_bytes": 2938
+        }
+      ],
+      "segment_count": 1,
+      "duration_ms": 3179,
+      "warnings": []
+    },
+    {
+      "id": "twitch-1",
+      "platform": "Twitch",
+      "url": "https://clips.twitch.tv/FaintLightGullWholeWheat",
+      "started_at": "2026-11-11T12:36:58.940077+00:00",
+      "job_id": "job_1d12289d95764a3090fc5340e7e058bd",
+      "status": "succeeded",
+      "stage": "completed",
+      "error": null,
+      "elapsed_seconds": 15.93,
+      "download_completed": true,
+      "media": {
+        "duration_ms": 32099,
+        "has_audio": true,
+        "has_video": true,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.007
+      },
+      "artifacts": [
+        {
+          "artifact_id": "art_2113653719c54cb79b239dcc467c83b0",
+          "format": "json",
+          "sha256": "3a16c0586f6b5e9399ec89b28b12be2b5826c096478bf270173f35962ba4affd",
+          "size_bytes": 17741
+        },
+        {
+          "artifact_id": "art_c3b9180bbc934cfe87bd1742032e2046",
+          "format": "srt",
+          "sha256": "b8c9c40736f840fcc5eb06fed8bda3561f536f45e7e39560a69ce54484e7d6ca",
+          "size_bytes": 1060
+        },
+        {
+          "artifact_id": "art_05b10e6e813e4c95aa2de2809787c4e4",
+          "format": "vtt",
+          "sha256": "58fa6cdc9eac5e66f428f332013783fa395970e5ee21794f575fc6de36f2df41",
+          "size_bytes": 1068
+        },
+        {
+          "artifact_id": "art_0a8c4c45a3be4399a8cdbc1c78378564",
+          "format": "txt",
+          "sha256": "ba936e47af421bbfbbf6f6c8e38ed760d0cfea7d258e6277209b9cb6aaee0b93",
+          "size_bytes": 730
+        },
+        {
+          "artifact_id": "art_bf9bee60c3c04c1eb8de846e11ae7b1f",
+          "format": "json",
+          "sha256": "349418115e97a90c3e50bef10e05465889788b1efa722d78279ce9304235d151",
+          "size_bytes": 21063
+        }
+      ],
+      "segment_count": 10,
+      "duration_ms": 32099,
+      "warnings": []
+    },
+    {
+      "id": "acfun-1",
+      "platform": "AcFun",
+      "url": "https://www.acfun.cn/v/ac35468952_2",
+      "started_at": "2026-11-11T12:37:14.879968+00:00",
+      "job_id": "job_11e0a03ab111489ab180f709f576dd49",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "EXTRACTOR_BROKEN",
+        "message": "站点下载失败，可能需要登录态、JS runtime 或平台适配更新。",
+        "retryable": true
+      },
+      "elapsed_seconds": 1.04,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "youku-1",
+      "platform": "Youku-Tudou",
+      "url": "https://play.tudou.com/v_show/id_XNjAxNjI2OTU3Ng==.html",
+      "started_at": "2026-11-11T12:37:15.921771+00:00",
+      "job_id": "job_858759749b1d4703ab758156b9c57714",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "EXTRACTOR_BROKEN",
+        "message": "站点下载失败，可能需要登录态、JS runtime 或平台适配更新。",
+        "retryable": true
+      },
+      "elapsed_seconds": 1.04,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "tencent-1",
+      "platform": "TencentVideo",
+      "url": "https://v.qq.com/x/page/q326831cny0.html",
+      "started_at": "2026-11-11T12:37:16.962689+00:00",
+      "job_id": "job_df67fa62d8dc46808c7d0922a383d2b4",
+      "status": "succeeded",
+      "stage": "completed",
+      "error": null,
+      "elapsed_seconds": 143.37,
+      "download_completed": true,
+      "media": {
+        "duration_ms": 215958,
+        "has_audio": true,
+        "has_video": true,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.0
+      },
+      "artifacts": [
+        {
+          "artifact_id": "art_a829dc1ef6974f9b821cebb18d9c75c7",
+          "format": "json",
+          "sha256": "be7fb6ce8e45258295ce6900d3311cf6031bfce764c28f1459d27b206877f40d",
+          "size_bytes": 85431
+        },
+        {
+          "artifact_id": "art_288a4ad7a6f44b42bf96c9bc73d306f4",
+          "format": "srt",
+          "sha256": "2a31646572765d34d4c7ca11af7687dceaec58cf5c4c448ecd086c184625d51f",
+          "size_bytes": 5065
+        },
+        {
+          "artifact_id": "art_4a92670000d8473882e4dbe9e3028cb6",
+          "format": "vtt",
+          "sha256": "c59869bab11c87c50325d03454a2ea987ff2f6af3f2bc9877c9717d5b11174d7",
+          "size_bytes": 5073
+        },
+        {
+          "artifact_id": "art_522a3c31b26a44888b7895508616dd0d",
+          "format": "txt",
+          "sha256": "c0235b2bc8c3ef63fc61c228e38b369e9e49583d39eae08b96ce210a62ffa883",
+          "size_bytes": 2185
+        },
+        {
+          "artifact_id": "art_12fecf7005c442f6b346031f770b27c7",
+          "format": "json",
+          "sha256": "5bc6d61fe2fafb2ac407ad3ae17b0affb282476186b8527a0f3887785c0af071",
+          "size_bytes": 95184
+        }
+      ],
+      "segment_count": 85,
+      "duration_ms": 215958,
+      "warnings": []
+    },
+    {
+      "id": "iqiyi-1",
+      "platform": "iQiyi",
+      "url": "https://www.iqiyi.com/v_19rrojlavg.html",
+      "started_at": "2026-11-11T12:39:40.339122+00:00",
+      "job_id": "job_6841c63254cf4ab8a5ad7bb635024c14",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "EXTRACTOR_BROKEN",
+        "message": "站点下载失败，可能需要登录态、JS runtime 或平台适配更新。",
+        "retryable": true
+      },
+      "elapsed_seconds": 0.53,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "mgtv-1",
+      "platform": "MangoTV",
+      "url": "https://www.mgtv.com/b/819152/24296086.html",
+      "started_at": "2026-11-11T12:39:40.878572+00:00",
+      "job_id": "job_a26bd207cd944dfdbce79835a5168f2c",
+      "status": "succeeded",
+      "stage": "completed",
+      "error": null,
+      "elapsed_seconds": 10.31,
+      "download_completed": true,
+      "media": {
+        "duration_ms": 30040,
+        "has_audio": true,
+        "has_video": true,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.0
+      },
+      "artifacts": [
+        {
+          "artifact_id": "art_325666e7f80446bc853b3ee409d61e33",
+          "format": "json",
+          "sha256": "4b50bd2a0fb345584f4487079acfe8c5746c5fc9097409e1f73514a26a43f7a4",
+          "size_bytes": 220
+        },
+        {
+          "artifact_id": "art_4db7b275f8a34d07b2c2ba52ad255ce7",
+          "format": "srt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "artifact_id": "art_114d3d943bd949a2a207511baf3a9c90",
+          "format": "vtt",
+          "sha256": "8eb5aec53542eaedb7502b22fb677161abba1e265b1338f1af1369a1f689837c",
+          "size_bytes": 8
+        },
+        {
+          "artifact_id": "art_159b22753492438681eae8a992746695",
+          "format": "txt",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+          "size_bytes": 1
+        },
+        {
+          "artifact_id": "art_85157fbc00084e4590fe56ed6853e97e",
+          "format": "json",
+          "sha256": "0e067eb1a71f9a29177297256bde425954eeaada563396d72555e7ad22684652",
+          "size_bytes": 1913
+        }
+      ],
+      "segment_count": 0,
+      "duration_ms": 30040,
+      "warnings": [
+        "no_speech"
+      ]
+    },
+    {
+      "id": "ted-1",
+      "platform": "TED",
+      "url": "https://www.ted.com/talks/matt_cutts_try_something_new_for_30_days",
+      "timeout_seconds": 300,
+      "started_at": "2026-11-11T12:39:51.209537+00:00",
+      "job_id": "job_3ff6a7b2e54e45eba52100cb4afa71c7",
+      "status": "succeeded",
+      "stage": "completed",
+      "error": null,
+      "elapsed_seconds": 164.02,
+      "download_completed": true,
+      "media": {
+        "duration_ms": 190316,
+        "has_audio": true,
+        "has_video": true,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "source_origin_seconds": 0.0,
+        "audio_start_seconds": 0.0
+      },
+      "artifacts": [
+        {
+          "artifact_id": "art_c1719e8a9c114ce6981885daf6808c49",
+          "format": "json",
+          "sha256": "3ad969ac05c8959ba18c3ddcebee8bb54220dfa2f43118588e3636db1122cdc4",
+          "size_bytes": 70578
+        },
+        {
+          "artifact_id": "art_069dd5c49bf94138a99d77509e01e866",
+          "format": "srt",
+          "sha256": "ccd5fbab0f0faa2257a2f9976a620fc639a47b636294f46d37c66291d90581f1",
+          "size_bytes": 4585
+        },
+        {
+          "artifact_id": "art_0caf2bc97c3b4e288e1058b95c062415",
+          "format": "vtt",
+          "sha256": "274c6ef13eb26f5ba0fdff0485fccb232535bebc1b18f20b32196dac3c470c31",
+          "size_bytes": 4593
+        },
+        {
+          "artifact_id": "art_081c739cc5054c7e92b61cea32fee700",
+          "format": "txt",
+          "sha256": "d0216d078a4a3ed12a0d42108465303257a15576d8c864353f6759e3679bf895",
+          "size_bytes": 2691
+        },
+        {
+          "artifact_id": "art_da24302d92be412ea2b9f223f1703442",
+          "format": "json",
+          "sha256": "dceca2b332f39ee3af23d5ff076a95486523a2e68ccde945b332cb747a96abe8",
+          "size_bytes": 78773
+        }
+      ],
+      "segment_count": 56,
+      "duration_ms": 190316,
+      "warnings": []
+    },
+    {
+      "id": "facebook-1",
+      "platform": "Facebook",
+      "url": "https://www.facebook.com/cnn/videos/10155529876156509/",
+      "started_at": "2026-11-11T12:42:35.233150+00:00",
+      "job_id": "job_390bbee58da24fc493dd95dad3501ff2",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "INTERNAL_ERROR",
+        "message": "处理失败，请查看服务端诊断。",
+        "retryable": true
+      },
+      "elapsed_seconds": 0.54,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    },
+    {
+      "id": "archive-1",
+      "platform": "ArchiveOrg",
+      "url": "https://archive.org/details/Election_Ads/Commercial-Nixon1960ElectionAdToughonDefense.mpg",
+      "started_at": "2026-11-11T12:42:35.787694+00:00",
+      "job_id": "job_175ee8543b4e4577ab138ac24e4bd796",
+      "status": "failed",
+      "stage": "acquire",
+      "error": {
+        "code": "INTERNAL_ERROR",
+        "message": "处理失败，请查看服务端诊断。",
+        "retryable": true
+      },
+      "elapsed_seconds": 0.54,
+      "download_completed": false,
+      "media": {},
+      "artifacts": []
+    }
+  ],
+  "capabilities": {
+    "version": "0.1.0",
+    "asr": [
+      {
+        "id": "tiny",
+        "engine": "faster_whisper",
+        "state": "ready"
+      },
+      {
+        "id": "base",
+        "engine": "faster_whisper",
+        "state": "not_installed"
+      },
+      {
+        "id": "small",
+        "engine": "faster_whisper",
+        "state": "not_installed"
+      },
+      {
+        "id": "medium",
+        "engine": "faster_whisper",
+        "state": "not_installed"
+      },
+      {
+        "id": "large-v3",
+        "engine": "faster_whisper",
+        "state": "not_installed"
+      },
+      {
+        "id": "large-v3-turbo",
+        "engine": "faster_whisper",
+        "state": "not_installed"
+      }
+    ],
+    "adapters": {
+      "upload": true,
+      "http_media": true,
+      "yt_dlp": true
+    },
+    "available_adapters": [
+      "http_media",
+      "yt_dlp"
+    ],
+    "operations": [
+      "transcribe",
+      "summarize",
+      "translate",
+      "extract",
+      "qa"
+    ],
+    "visual": false,
+    "offline": false,
+    "max_upload_bytes": 2147483648
+  },
+  "finished_at": "2026-11-11T12:42:36.333775+00:00",
+  "deployment_image_id": "sha256:2e2c6110c31002ad6c7aaedba45f727bb8d88a22c4c88e92830320f7fc523744"
+}
