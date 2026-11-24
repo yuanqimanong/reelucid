@@ -20,6 +20,7 @@ PRIVATE_URL = "https://media.example/video?token=secret-marker"
         (401, "AUTH_REQUIRED", False),
         (403, "SOURCE_ACCESS_REQUIRED", False),
         (404, "SOURCE_NOT_FOUND", False),
+        (412, "SOURCE_PRECONDITION_FAILED", False),
         (429, "RATE_LIMITED", True),
         (503, "DOWNLOAD_FAILED", True),
         (504, "DOWNLOAD_TIMEOUT", True),

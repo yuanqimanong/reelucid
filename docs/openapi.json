@@ -297,6 +297,57 @@
         }
       }
     },
+    "/api/v1/assets/{identifier}/source-url": {
+      "get": {
+        "tags": [
+          "Assets"
+        ],
+        "summary": "Source Url",
+        "operationId": "source_url_api_v1_assets__identifier__source_url_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Source Url Api V1 Assets  Identifier  Source Url Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/assets/{identifier}/media": {
       "get": {
         "tags": [

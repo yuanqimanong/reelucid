@@ -11,6 +11,7 @@
 | 上传本地音视频 | 新建任务 → 本地文件 | `POST /assets` | 管理员 | `multipart/form-data` 的 `file`。启用 `adapters.upload`，遵守上传上限。返回 `asset_id`。 |
 | URL 导入 | 新建任务 → 视频链接 | `POST /jobs` | 管理员 | `source.kind=url`，填 URL 或含一条链接的分享文案。关闭离线模式，并启用适配器。DTK、XHS 和站点凭据按来源配置。请求同时建立素材和处理任务。 |
 | 查看素材、播放或读取原片 | 任务详情 → 播放器 | `GET /assets/{id}`、`GET /assets/{id}/media` | 管理员 | 已上传或已完成来源下载。媒体支持 HTTP Range。 |
+| 查看 URL 来源地址 | API | `GET /assets/{id}/source-url` | 管理员 | 读取 URL 素材保存的原始链接。下载失败的素材也可查询，响应要求禁止缓存。 |
 | 本地语音转录 | 新建任务 → 语音转录 | `POST /jobs`，`operations[].type=transcribe` | 管理员 | 处理预设选用已安装的 ASR 模型。原片须有音轨。可设置语言与导出格式。省略 `operations` 时默认转录。 |
 | 媒体转码 | 新建任务 → 媒体转码 | `POST /jobs`，`operations[].type=transcode` | 管理员 | `options.preset` 取 `audio_mp3`、`audio_wav` 或 `video_mp4`。需要 FFmpeg、ffprobe 及对应编码器。音频预设须有音轨，MP4 预设须有视频轨。可单独使用或和转录一起提交。 |
 | 列出和查看任务 | 任务与文稿、任务详情 | `GET /jobs`、`GET /jobs/{id}` | 管理员 | 列表支持 `limit`、`cursor`、`status`、`created_before`、`created_after`。详情含进度、阶段、错误及已发布产物。 |
