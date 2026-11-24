@@ -97,6 +97,8 @@ def _http_error(status: int) -> ReelucidError:
         return ReelucidError("AUTH_REQUIRED", "来源服务要求身份验证。")
     if status == 403:
         return ReelucidError("SOURCE_ACCESS_REQUIRED", "来源服务拒绝了访问请求（HTTP 403）。")
+    if status == 412:
+        return ReelucidError("SOURCE_PRECONDITION_FAILED", "来源服务拒绝了当前请求（HTTP 412）。")
     if status in {404, 410}:
         return ReelucidError("SOURCE_NOT_FOUND", "来源服务未找到所请求的资源。")
     if status == 429:

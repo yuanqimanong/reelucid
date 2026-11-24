@@ -33,11 +33,19 @@ def test_url_admission_registers_only_accepted_assets(
         settings = http.get(settings_url).json()["config"]
         settings["queue_limit"] = 1
         assert http.put(settings_url, json=settings).status_code == 200
-        url = "https://example.org/sample.mp4"
+        url = "https://example.org/sample.mp4?access=test-key"
         body = {"source": {"kind": "url", "url": url}}
         headers = {"Idempotency-Key": "test-url-admission"}
         accepted = http.post("/api/v1/jobs", json=body, headers=headers)
         assert accepted.status_code == 202
+        path = f"/api/v1/assets/{accepted.json()['asset_id']}"
+        assert url not in http.get(path).text
+        auth = http.headers.pop("Authorization")
+        assert http.get(path + "/source-url").status_code == 401
+        http.headers["Authorization"] = auth
+        source = http.get(path + "/source-url")
+        assert source.json() == {"url": url}
+        assert source.headers["Cache-Control"] == "private, no-store"
         replay = http.post("/api/v1/jobs", json=body, headers=headers)
         assert replay.json()["asset_id"] == accepted.json()["asset_id"]
         assert replay.json()["job_id"] == accepted.json()["job_id"]
@@ -88,6 +96,7 @@ def test_auth_config_cas_upload_and_media_range(client: TestClient) -> None:
     )
     assert upload.status_code == 201
     asset = upload.json()["asset_id"]
+    assert client.get(f"/api/v1/assets/{asset}/source-url").status_code == 404
     media = client.get(f"/api/v1/assets/{asset}/media", headers={"Range": "bytes=0-3"})
     assert media.status_code == 206 and media.content == b"fake"
     assert (

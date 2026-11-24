@@ -6,10 +6,10 @@ import errno
 import mimetypes
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, Response
 from fastapi.responses import FileResponse
 
-from reelucid.api.runtime import ConfigDep, DatabaseDep
+from reelucid.api.runtime import ConfigDep, DatabaseDep, SecurityDep
 from reelucid.api.uploads import store_upload
 from reelucid.database import new_id
 from reelucid.domain import JsonObject, ReelucidError
@@ -75,6 +75,18 @@ async def get_asset(db: DatabaseDep, identifier: str) -> JsonObject:
         "media_url": f"/api/v1/assets/{identifier}/media",
         "has_source": bool(value["resources"]),
     }
+
+
+@asset_router.get("/assets/{identifier}/source-url", tags=["Assets"])
+async def source_url(
+    db: DatabaseDep, security: SecurityDep, identifier: str, response: Response
+) -> dict[str, str]:
+    value = await db.run(db.asset, identifier)
+    encrypted = value["source"].get("url")
+    if value["kind"] != "url" or not isinstance(encrypted, str) or not encrypted:
+        raise ReelucidError("NOT_FOUND", "此素材没有来源 URL。")
+    response.headers["Cache-Control"] = "private, no-store"
+    return {"url": security.decrypt(encrypted)}
 
 
 @asset_router.get(
