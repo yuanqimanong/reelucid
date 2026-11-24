@@ -89,3 +89,21 @@ def test_pinned_qa_needs_only_lightweight_resources_on_a_small_host() -> None:
     assert qa and not qa.impossible and qa.cpu_threads == 0
     assert replace(budget, active=(qa,)).allocate(job, "ai") is None
     assert replace(budget, active=(qa,)).allocate(job, "download") is not None
+
+
+def test_audio_transcode_can_start_under_memory_pressure_that_defers_video() -> None:
+    budget = Budget(ResourceSample(4, 2048 * MIB, 720 * MIB, 0.1), 4)
+    job = media_job()
+    operations = [
+        {"type": "transcribe"},
+        {"type": "transcode", "options": {"preset": "audio_mp3"}},
+        {"type": "transcode", "options": {"preset": "audio_wav"}},
+    ]
+    job["request"]["operations"] = operations
+    audio = budget.allocate(job, "transcode")
+    assert audio and audio.workload.memory == 256 * MIB and audio.cpu_threads == 2
+    operations.append({"type": "transcode", "options": {"preset": "video_mp4"}})
+    assert budget.allocate(job, "transcode") is None
+    normal = replace(budget, sample=replace(budget.sample, memory_available=1800 * MIB))
+    video = normal.allocate(job, "transcode")
+    assert video and video.workload.memory == 768 * MIB

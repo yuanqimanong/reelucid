@@ -31,7 +31,13 @@ class Workload:
         if phase == "install":
             return cls(512 * MIB, phase)
         if phase == "transcode":
-            return cls(768 * MIB, phase)
+            presets = [
+                operation.get("options", {}).get("preset")
+                for operation in job["request"].get("operations", [])
+                if operation["type"] == "transcode"
+            ]
+            audio_only = bool(presets) and all(p in {"audio_mp3", "audio_wav"} for p in presets)
+            return cls((256 if audio_only else 768) * MIB, phase)
         if phase in {"download", "ai"}:
             return cls(128 * MIB, phase)
         request, settings = job["request"], job["snapshot"]
