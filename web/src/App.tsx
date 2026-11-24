@@ -9,7 +9,12 @@ import { SettingsPage } from "./pages/SettingsPage";
 import { ComponentsPage } from "./pages/ComponentsPage";
 import { api, json } from "./api";
 
-type Capabilities = { version: string; asr: Model[]; xhs_resolver: XhsStatus };
+type Capabilities = {
+  version: string;
+  asr: Model[];
+  xhs_resolver: XhsStatus;
+  transcode_presets?: string[];
+};
 
 const navigation = [
   { id: "new", icon: "plus", label: "新建任务" },
@@ -228,6 +233,7 @@ export function App() {
               config={config}
               xhsConfigured={xhs.configured}
               models={models}
+              transcodePresets={capabilities?.transcode_presets ?? []}
               credentials={credentials}
               onOpen={open}
               onSettings={() => navigate("settings")}

@@ -18,6 +18,12 @@ from reelucid.job_config import settings_value
 
 asset_router = APIRouter()
 artifact_router = APIRouter()
+file_responses: dict[int | str, JsonObject] = {
+    200: {
+        "content": {"application/octet-stream": {"schema": {"type": "string", "format": "binary"}}}
+    },
+    206: {"description": "Partial Content"},
+}
 
 
 @asset_router.post(
@@ -71,7 +77,12 @@ async def get_asset(db: DatabaseDep, identifier: str) -> JsonObject:
     }
 
 
-@asset_router.get("/assets/{identifier}/media", tags=["Assets"])
+@asset_router.get(
+    "/assets/{identifier}/media",
+    tags=["Assets"],
+    response_class=FileResponse,
+    responses=file_responses,
+)
 async def media(db: DatabaseDep, runtime: ConfigDep, identifier: str) -> FileResponse:
     value = await db.run(db.asset, identifier)
     resource = value["resources"].get("source")
@@ -95,7 +106,12 @@ async def artifact(db: DatabaseDep, identifier: str) -> JsonObject:
     return {k: v for k, v in value.items() if k != "path"}
 
 
-@artifact_router.get("/artifacts/{identifier}/content", tags=["Artifacts"])
+@artifact_router.get(
+    "/artifacts/{identifier}/content",
+    tags=["Artifacts"],
+    response_class=FileResponse,
+    responses=file_responses,
+)
 async def content(db: DatabaseDep, runtime: ConfigDep, identifier: str) -> FileResponse:
     value = await db.run(db.artifact, identifier)
     path = contained(runtime.data_dir / "artifacts", Path(value["path"]))

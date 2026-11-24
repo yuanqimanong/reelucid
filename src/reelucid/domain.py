@@ -11,6 +11,12 @@ type JsonObject = dict[str, Any]
 type ChunkStrategy = Literal["adjacent", "silence"]
 type ChunkPolicy = Literal["auto", "adjacent", "silence"]
 CHUNK_POLICIES = ("auto", "adjacent", "silence")
+type TranscodePreset = Literal["audio_mp3", "audio_wav", "video_mp4"]
+TRANSCODE_FORMATS: dict[TranscodePreset, str] = {
+    "audio_mp3": "mp3",
+    "audio_wav": "wav",
+    "video_mp4": "mp4",
+}
 
 
 class ReelucidError(Exception):

@@ -43,6 +43,12 @@ export function TaskDetail({
         正在读取任务…{error && <Notice error>{error}</Notice>}
       </div>
     );
+  const transcodeOnly =
+    !!job.effective_plan?.length &&
+    job.effective_plan.every((op) => op.type === "transcode");
+  const exports = (job.artifacts ?? []).filter((a) =>
+    ["subtitle", "document", "transcript", "media"].includes(a.kind),
+  );
   return (
     <>
       <button className="back-button" onClick={onBack}>
@@ -127,6 +133,7 @@ export function TaskDetail({
             name={name}
             hasVideo={!!asset?.media.has_video}
             transcript={transcript}
+            showTranscript={!transcodeOnly}
             media={media}
             time={time}
             setTime={setTime}
@@ -139,30 +146,28 @@ export function TaskDetail({
                 <h2>导出结果</h2>
               </div>
               <div className="export-links">
-                {(job.artifacts ?? [])
-                  .filter((a) =>
-                    ["subtitle", "document", "transcript"].includes(a.kind),
-                  )
-                  .map((a) => (
-                    <a key={a.artifact_id} href={a.content_url} download>
-                      <span>{a.format.toUpperCase()}</span>
-                      <Icon name="download" size={15} />
-                    </a>
-                  ))}
+                {exports.map((a) => (
+                  <a key={a.artifact_id} href={a.content_url} download>
+                    <span>{a.format.toUpperCase()}</span>
+                    <Icon name="download" size={15} />
+                  </a>
+                ))}
               </div>
-              {!job.artifacts?.length && (
+              {exports.length === 0 && (
                 <p className="muted small">产物完成后即可下载。</p>
               )}
             </section>
-            <TaskAnswers
-              result={result}
-              transcriptArtifactId={transcriptArtifactId}
-              assetId={job.asset_id}
-              profiles={config.processing_profiles}
-              seek={seek}
-              onOpen={onOpen}
-              setError={setError}
-            />
+            {!transcodeOnly && (
+              <TaskAnswers
+                result={result}
+                transcriptArtifactId={transcriptArtifactId}
+                assetId={job.asset_id}
+                profiles={config.processing_profiles}
+                seek={seek}
+                onOpen={onOpen}
+                setError={setError}
+              />
+            )}
             <section className="card stage-card">
               <h2>处理轨迹</h2>
               {job.stages?.map((s) => (

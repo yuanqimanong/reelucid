@@ -8,6 +8,7 @@ type Props = {
   name: string;
   hasVideo: boolean;
   transcript: Transcript | null;
+  showTranscript: boolean;
   media: RefObject<HTMLMediaElement | null>;
   time: number;
   setTime: (ms: number) => void;
@@ -18,6 +19,7 @@ export function TranscriptReader({
   name,
   hasVideo,
   transcript,
+  showTranscript,
   media,
   time,
   setTime,
@@ -60,57 +62,59 @@ export function TranscriptReader({
             </>
           ))}
       </div>
-      <section className="card transcript">
-        <div className="transcript-head">
-          <div>
-            <h2>同步文稿</h2>
-            <small>
-              {transcript
-                ? `${transcript.language.toUpperCase()} · ${clock(transcript.duration_ms)} · ${transcript.segments?.length ?? 0} 段`
-                : "语音识别完成后，文稿会显示在这里。"}
-            </small>
-          </div>
-          <label className="search">
-            <Icon name="search" size={17} />
-            <input
-              aria-label="搜索文稿"
-              placeholder="搜索原话…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </label>
-        </div>
-        <div className="segment-list">
-          {segments.length ? (
-            segments.map((s) => (
-              <button
-                key={s.segment_id}
-                className={`segment ${time >= s.start_ms && time < s.end_ms ? "current" : ""}`}
-                onClick={() => seek(s.start_ms)}
-              >
-                <span>{clock(s.start_ms)}</span>
-                <p>
-                  {s.text}
-                  {s.needs_review && (
-                    <small className="review-tag">待核对</small>
-                  )}
-                </p>
-              </button>
-            ))
-          ) : (
-            <div className="empty">
-              <Icon name="tasks" size={30} />
-              <p>
-                {transcript?.warnings.includes("no_speech")
-                  ? "没有检测到可转录语音。"
-                  : search
-                    ? "没有匹配的原话。"
-                    : "等待文稿就绪。"}
-              </p>
+      {showTranscript && (
+        <section className="card transcript">
+          <div className="transcript-head">
+            <div>
+              <h2>同步文稿</h2>
+              <small>
+                {transcript
+                  ? `${transcript.language.toUpperCase()} · ${clock(transcript.duration_ms)} · ${transcript.segments?.length ?? 0} 段`
+                  : "语音识别完成后，文稿会显示在这里。"}
+              </small>
             </div>
-          )}
-        </div>
-      </section>
+            <label className="search">
+              <Icon name="search" size={17} />
+              <input
+                aria-label="搜索文稿"
+                placeholder="搜索原话…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </label>
+          </div>
+          <div className="segment-list">
+            {segments.length ? (
+              segments.map((s) => (
+                <button
+                  key={s.segment_id}
+                  className={`segment ${time >= s.start_ms && time < s.end_ms ? "current" : ""}`}
+                  onClick={() => seek(s.start_ms)}
+                >
+                  <span>{clock(s.start_ms)}</span>
+                  <p>
+                    {s.text}
+                    {s.needs_review && (
+                      <small className="review-tag">待核对</small>
+                    )}
+                  </p>
+                </button>
+              ))
+            ) : (
+              <div className="empty">
+                <Icon name="tasks" size={30} />
+                <p>
+                  {transcript?.warnings.includes("no_speech")
+                    ? "没有检测到可转录语音。"
+                    : search
+                      ? "没有匹配的原话。"
+                      : "等待文稿就绪。"}
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

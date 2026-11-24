@@ -9,8 +9,10 @@ from fastapi.responses import JSONResponse
 
 from reelucid import __version__
 from reelucid.api.runtime import ConfigDep, DatabaseDep, ServiceDep
+from reelucid.api.schemas import Capabilities
 from reelucid.domain import JsonObject
 from reelucid.job_config import settings_value
+from reelucid.media import available_transcode_presets
 from reelucid.models import catalog
 from reelucid.source_catalogue import source_catalogue
 
@@ -29,9 +31,10 @@ async def ready(service: ServiceDep) -> Response:
 
 
 @system_router.get("/capabilities", tags=["System"])
-async def capabilities(db: DatabaseDep, service: ServiceDep, runtime: ConfigDep) -> JsonObject:
+async def capabilities(db: DatabaseDep, service: ServiceDep, runtime: ConfigDep) -> Capabilities:
     """xhs_resolver.local_available 表示本机已安装插件。configured 表示所选方式已配置，外部服务的连通性在处理任务时检查。"""
     current = settings_value(await db.run(db.settings))
+    transcode_presets = await asyncio.to_thread(available_transcode_presets)
     return {
         "version": __version__,
         "asr": await asyncio.to_thread(catalog, runtime.models_dir),
@@ -55,7 +58,15 @@ async def capabilities(db: DatabaseDep, service: ServiceDep, runtime: ConfigDep)
         },
         "source_catalogue_url": "/api/v1/source-platforms",
         "source_proxy_enabled": runtime.source_proxy is not None,
-        "operations": ["transcribe", "summarize", "translate", "extract", "qa"],
+        "operations": [
+            "transcribe",
+            "summarize",
+            "translate",
+            "extract",
+            "qa",
+            *(["transcode"] if transcode_presets else []),
+        ],
+        "transcode_presets": transcode_presets,
         "visual": False,
         "offline": runtime.offline,
         "max_upload_bytes": min(runtime.max_bytes, current.max_upload_mb * 1024**2),

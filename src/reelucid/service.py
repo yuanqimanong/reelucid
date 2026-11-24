@@ -128,6 +128,7 @@ class Service:
             "active_jobs": len(self.running),
             "active_stages": dict(Counter(a.workload.phase for a in budget.active)),
             "download_slots": budget.stage_limit("download"),
+            "transcode_slots": budget.stage_limit("transcode"),
             "ai_slots": budget.stage_limit("ai"),
         }
 

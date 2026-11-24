@@ -98,9 +98,6 @@ jobs:
           cache-from: type=gha
       - name: Start and check release container
         run: docker compose up -d --no-build --pull never --wait --wait-timeout 150 reelucid
-      - name: Print release container logs
-        if: failure()
-        run: docker compose logs --no-color reelucid
       - name: Push versioned image
         env:
           DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
@@ -113,3 +110,24 @@ jobs:
           image="docker.io/${DOCKERHUB_USERNAME}/reelucid:${VERSION}"
           docker tag "$REELUCID_IMAGE" "$image"
           docker push "$image"
+      - name: Verify published image over HTTP
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          docker compose down --volumes
+          export REELUCID_IMAGE="docker.io/${DOCKERHUB_USERNAME}/reelucid:${VERSION}"
+          docker compose up -d --no-build --pull always --wait --wait-timeout 150 reelucid
+          fixture="$RUNNER_TEMP/reelucid-speech.mkv"
+          docker compose exec -T reelucid ffmpeg -v error -y \
+            -f lavfi -i 'color=c=black:s=160x120:r=10' \
+            -f lavfi -i "flite=text='The meeting is on Monday. Please send the budget report before Friday.':voice=slt" \
+            -shortest -c:v ffv1 -c:a pcm_s16le /data/work/tmp/reelucid-speech.mkv
+          docker compose cp reelucid:/data/work/tmp/reelucid-speech.mkv "$fixture"
+          REELUCID_TOKEN="$(docker compose exec -T reelucid cat /data/secrets/admin_token)"
+          echo "::add-mask::$REELUCID_TOKEN"
+          export REELUCID_TOKEN
+          python tests/smoke_transcode_http.py "$fixture"
+      - name: Print release container logs
+        if: failure()
+        run: docker compose logs --no-color reelucid

@@ -7,6 +7,7 @@ export function NewTask({
   config,
   xhsConfigured,
   models,
+  transcodePresets,
   credentials,
   onOpen,
   onSettings,
@@ -14,6 +15,7 @@ export function NewTask({
   config: Settings;
   xhsConfigured: boolean;
   models: Model[];
+  transcodePresets: string[];
   credentials: string[];
   onOpen: (id: string) => void;
   onSettings: () => void;
@@ -26,11 +28,17 @@ export function NewTask({
       config.processing_profiles[0]?.id ?? "local-default",
     ),
     [language, setLanguage] = useState("auto"),
+    [transcribe, setTranscribe] = useState(true),
+    [transcodePreset, setTranscodePreset] = useState(""),
     [summary, setSummary] = useState(false),
     [cookie, setCookie] = useState(""),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [dragging, setDragging] = useState(false);
+  const doTranscribe = transcribe || transcodePresets.length === 0;
+  const preset = transcodePresets.includes(transcodePreset)
+    ? transcodePreset
+    : "";
   const input = useRef<HTMLInputElement>(null),
     selectedProfile = config.processing_profiles.find((p) => p.id === profile),
     ready = models.some(
@@ -64,8 +72,13 @@ export function NewTask({
           source,
           processing_profile_id: profile,
           operations: [
-            { id: "transcript", type: "transcribe", required: true },
-            ...(summary
+            ...(doTranscribe
+              ? [{ id: "transcript", type: "transcribe", required: true }]
+              : []),
+            ...(preset
+              ? [{ id: "media", type: "transcode", options: { preset } }]
+              : []),
+            ...(doTranscribe && summary
               ? [
                   {
                     id: "summary",
@@ -95,7 +108,7 @@ export function NewTask({
       <div className="page-heading import-heading">
         <div>
           <h1>新建任务</h1>
-          <p>导入音视频，生成带时间戳的文稿与字幕。</p>
+          <p>导入音视频，生成文稿、字幕或转码文件。</p>
         </div>
       </div>
       <div className="new-layout">
@@ -228,11 +241,44 @@ export function NewTask({
           <div className="section-title second">
             <h2>处理方式</h2>
           </div>
+          {transcodePresets.length > 0 && (
+            <>
+              <label className="toggle-line">
+                <input
+                  type="checkbox"
+                  checked={doTranscribe}
+                  onChange={(e) => setTranscribe(e.target.checked)}
+                />
+                <strong>语音转录</strong>
+              </label>
+              <label>
+                媒体转码
+                <select
+                  value={preset}
+                  onChange={(e) => setTranscodePreset(e.target.value)}
+                >
+                  <option value="">关闭</option>
+                  {transcodePresets.map((id) => (
+                    <option key={id} value={id}>
+                      {(
+                        {
+                          audio_mp3: "MP3 音频",
+                          audio_wav: "WAV 音频",
+                          video_mp4: "MP4 视频",
+                        } as Record<string, string>
+                      )[id] ?? id}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </>
+          )}
           <div className="form-grid">
             <label>
               处理预设
               <select
                 value={profile}
+                disabled={!doTranscribe}
                 onChange={(e) => setProfile(e.target.value)}
               >
                 {config.processing_profiles.map((p) => (
@@ -246,6 +292,7 @@ export function NewTask({
               语音语言
               <select
                 value={language}
+                disabled={!doTranscribe}
                 onChange={(e) => setLanguage(e.target.value)}
               >
                 <option value="auto">自动识别</option>
@@ -262,7 +309,8 @@ export function NewTask({
           <label className="toggle-line">
             <input
               type="checkbox"
-              checked={summary}
+              checked={doTranscribe && summary}
+              disabled={!doTranscribe}
               onChange={(e) => setSummary(e.target.checked)}
             />
             <span>
@@ -271,7 +319,7 @@ export function NewTask({
             </span>
             <Icon name="spark" />
           </label>
-          {!ready && (
+          {doTranscribe && !ready && (
             <Notice>
               当前预设的 {selectedProfile?.model_id} 模型尚未安装。
               <button
@@ -287,37 +335,47 @@ export function NewTask({
           <div className="submit-row">
             <button
               className="primary"
-              disabled={busy || !ready || (mode === "file" && !file)}
+              disabled={
+                busy ||
+                (doTranscribe ? !ready : !preset) ||
+                (mode === "file" && !file)
+              }
             >
               {busy ? "正在提交…" : "开始处理"}
               <Icon name="arrow" size={18} />
             </button>
           </div>
         </form>
-        <aside className="new-aside">
-          <section className="task-spec">
-            <h2>本次转录</h2>
-            <dl>
-              <div>
-                <dt>转录模型</dt>
-                <dd>{selectedProfile?.model_id ?? "未选择"}</dd>
-              </div>
-              <div>
-                <dt>推理设备</dt>
-                <dd>{selectedProfile?.device.toUpperCase() ?? "—"}</dd>
-              </div>
-              <div>
-                <dt>最长时长</dt>
-                <dd>{config.max_duration_seconds / 3600} 小时</dd>
-              </div>
-            </dl>
-            <h3>导出格式</h3>
-            <p className="formats">JSON · SRT · VTT · TXT · MD</p>
-            <button className="text-button" type="button" onClick={onSettings}>
-              调整转录预设 <Icon name="arrow" size={15} />
-            </button>
-          </section>
-        </aside>
+        {doTranscribe && (
+          <aside className="new-aside">
+            <section className="task-spec">
+              <h2>本次转录</h2>
+              <dl>
+                <div>
+                  <dt>转录模型</dt>
+                  <dd>{selectedProfile?.model_id ?? "未选择"}</dd>
+                </div>
+                <div>
+                  <dt>推理设备</dt>
+                  <dd>{selectedProfile?.device.toUpperCase() ?? "—"}</dd>
+                </div>
+                <div>
+                  <dt>最长时长</dt>
+                  <dd>{config.max_duration_seconds / 3600} 小时</dd>
+                </div>
+              </dl>
+              <h3>导出格式</h3>
+              <p className="formats">JSON · SRT · VTT · TXT · MD</p>
+              <button
+                className="text-button"
+                type="button"
+                onClick={onSettings}
+              >
+                调整转录预设 <Icon name="arrow" size={15} />
+              </button>
+            </section>
+          </aside>
+        )}
       </div>
     </>
   );

@@ -53,7 +53,12 @@ def encode(event: JsonObject) -> str:
     return f"{cursor}event: {event['type']}\ndata: {data}\n\n"
 
 
-@router.get("/jobs/{identifier}/events", tags=["Jobs"])
+@router.get(
+    "/jobs/{identifier}/events",
+    tags=["Jobs"],
+    response_class=StreamingResponse,
+    responses={200: {"content": {"text/event-stream": {"schema": {"type": "string"}}}}},
+)
 async def events(
     identifier: str,
     request: Request,

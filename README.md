@@ -1,8 +1,8 @@
 # Reelucid · 帧闻录
 
-Reelucid 是一款可自行部署的音视频转录工具。你可以上传本地文件，也可以提交视频 URL，让 Reelucid 下载媒体。语音在本地识别，生成的文稿和字幕带有原片时间戳。网页支持按文稿跳转播放、导出结果和配置独立的文本 AI 服务。
+Reelucid 是一款可自行部署的音视频转录和转码工具。你可以上传本地文件，也可以提交视频 URL，让 Reelucid 下载媒体。语音在本地识别，生成的文稿和字幕带有原片时间戳。网页支持按文稿跳转播放、下载转码文件和配置独立的文本 AI 服务。
 
-可选文本任务包括摘要、翻译、提取和问答。OCR、视觉分析、来源字幕复用、完成回调、自动文件回收、直播和跨主机 worker 仍待实现。[OpenAPI](docs/openapi.json)
+可选文本任务包括摘要、翻译、提取和问答。OCR、视觉分析、来源字幕复用、完成回调、自动文件回收、直播和跨主机 worker 仍待实现。[API 功能清单](docs/api-coverage.md) · [OpenAPI](docs/openapi.json)
 
 ## Docker 启动
 
@@ -19,7 +19,7 @@ docker compose exec reelucid cat /data/secrets/admin_token
 
 ### 从 Docker Hub 拉取镜像
 
-镜像发布后，在项目根目录的 `.env` 中设置 `REELUCID_IMAGE=你的DockerID/reelucid:1.0.1`，把 `你的DockerID` 替换为发布者的 Docker Hub 用户名。私有仓库需要先在部署机器上运行 `docker login`。
+在项目根目录的 `.env` 中设置 `REELUCID_IMAGE=yuanqimanong/reelucid:1.1.0`。使用自己的私有仓库时，先在部署机器上运行 `docker login`。
 
 ```bash
 docker compose pull reelucid
@@ -30,19 +30,19 @@ docker compose up -d --no-build --wait reelucid
 
 1. 在个人命名空间下创建 `reelucid` 镜像仓库，再创建权限为 `Read & Write` 的个人访问令牌。[创建仓库](https://docs.docker.com/docker-hub/repos/create/) · [创建令牌](https://docs.docker.com/security/access-tokens/)
 2. 打开 GitHub 仓库的 `Settings → Secrets and variables → Actions`。在 `Variables` 添加 `DOCKERHUB_USERNAME`，值为 Docker Hub 用户名。在 `Secrets` 添加 `DOCKERHUB_TOKEN`，值为个人访问令牌。
-3. 将工作流提交推送到 GitHub，在待发布提交上创建并推送与 `pyproject.toml` 版本一致的 Git 标签。以 `1.0.1` 为例：
+3. 将工作流提交推送到 GitHub，在待发布提交上创建并推送与 `pyproject.toml` 版本一致的 Git 标签。例如，发布 `1.1.0` 时运行以下命令。
 
    ```bash
-   git tag v1.0.1
-   git push origin v1.0.1
+   git tag v1.1.0
+   git push origin v1.1.0
    ```
 
-GitHub Actions 在 Python、前端和容器就绪检查通过后推送 `你的DockerID/reelucid:1.0.1`。发布目标为 `linux/amd64`，镜像标签取自项目版本。[发布工作流](.github/workflows/ci.yml)
+GitHub Actions 在 Python、前端和容器就绪检查通过后推送 `你的DockerID/reelucid:1.1.0`。发布目标为 `linux/amd64`，镜像标签取自项目版本。[发布工作流](.github/workflows/ci.yml)
 
 ### Web 使用
 
-1. 打开「新建任务」，上传音视频或粘贴一条视频链接，选好预设和语言后提交。普通转录可以直接用默认预设。
-2. 在「任务与文稿」查看进度。打开任务详情，点击文稿时间戳跳到原片对应位置，或下载 JSON、SRT、VTT、TXT、Markdown。
+1. 打开「新建任务」，上传音视频或粘贴一条视频链接。语音转录可用默认预设。需要转换文件时选择「媒体转码」，关闭「语音转录」即可单独转码。
+2. 在「任务与文稿」查看进度。打开任务详情，点击文稿时间戳跳到原片对应位置，或下载文稿、字幕及 MP3、WAV、MP4 转码产物。
 3. 在「模型与设置」管理转录预设、下载凭据和文本 AI，也可以安装其他本地模型。
 
 ## 可选组件
@@ -96,13 +96,28 @@ curl -fsS -H "Authorization: Bearer $REELUCID_TOKEN" \
 
 结果默认返回文稿版本信息和下载链接。加上 `include=transcript` 可获取完整文稿，时间戳用原片上的整数毫秒表示。下载时，用同一个 Bearer Token 请求结果中的 `content_url`。原片和产物都可以用 HTTP Range 读取。幂等键保留 24 小时。用同一个键提交不同的请求会收到 409。
 
+### 媒体转码
+
+`GET /api/v1/capabilities` 的 `operations` 和 `transcode_presets` 可以查询转码是否可用。单独转码只需 FFmpeg 和 ffprobe，可使用上传素材或 URL。向 `POST /api/v1/jobs` 提交以下 JSON，将 `ast_example` 替换为实际 `asset_id`。
+
+```json
+{
+  "source": {"kind": "asset", "asset_id": "ast_example"},
+  "operations": [{"id": "media", "type": "transcode", "options": {"preset": "audio_mp3"}}]
+}
+```
+
+可用预设为 `audio_mp3`（MP3）、`audio_wav`（PCM WAV）和 `video_mp4`（H.264 视频，有音轨时编码为 AAC）。在 `operations` 中再加 `{"id":"transcript","type":"transcribe"}` 可同时生成文稿、字幕和转码文件，此时需要已安装的 ASR 模型。成功的转码在结果 `artifacts` 中返回 `kind: "media"`、`artifact_id`、`format`、`size_bytes`、`sha256` 和 `content_url`。若同一任务有多项转码，可通过 `outputs[].artifact_id` 找到各自的产物。
+
+### 任务与文本结果
+
 提交 URL 时，服务在同一个事务里创建媒体记录（`asset_id`）和任务。队列满时返回 429，稍后可用同一个幂等键重试。处理本地文件时，先用 `POST /assets` 上传，再用返回的 `asset_id` 创建任务。同一文件的 ID 可以复用。
 
 只执行文本操作且 `source.kind=asset` 时，可用 `source.transcript_artifact_id` 指定使用哪份文稿。这个值是原任务产物中 `kind=transcript` 那一项的 `artifact_id`。从网页上的文稿发起提问时，页面会自动传入该值。重试沿用提交时选中的版本。如果任务读取前文稿已被删除，任务会报错。
 
-用 `POST /api/v1/jobs/{id}/cancel` 取消任务。Reelucid 会关闭正在等待的 AI 请求，停止后续批次和格式重试。已发出的请求是否继续处理或计费，取决于模型服务商。本地推理在当前分块结束时响应取消，视频下载在适配器检查取消信号时退出。取消模型安装仍要等当前同步下载结束。如果取消发生在模型发布前，文件会留在暂存目录。
+用 `POST /api/v1/jobs/{id}/cancel` 取消任务。Reelucid 会关闭正在等待的 AI 请求，停止后续批次和格式重试。已发出的请求是否继续处理或计费，取决于模型服务商。本地推理在当前分块结束时响应取消，视频下载在适配器检查取消信号时退出，媒体转码会终止正在运行的 FFmpeg。取消模型安装仍要等当前同步下载结束。如果取消发生在模型发布前，文件会留在暂存目录。
 
-用 `POST /api/v1/jobs/{id}/retry` 重试失败、已取消或部分完成的任务。重试会复用已登记且哈希匹配的转录块，并重新执行请求中的 AI 操作。
+用 `POST /api/v1/jobs/{id}/retry` 重试失败、已取消或部分完成的任务。重试会复用已登记且哈希匹配的转录块，并重新执行请求中的转码和 AI 操作。
 
 ## 视频源与扩展
 
@@ -159,7 +174,7 @@ cd web && npm run check && npm run build
 
 | 环境变量 | 默认值/作用 |
 |---|---|
-| `REELUCID_IMAGE` | Compose 镜像标签，默认 `reelucid:1.0.1` |
+| `REELUCID_IMAGE` | Compose 镜像标签，默认 `reelucid:1.1.0` |
 | `REELUCID_SOURCE_PROXY` | 可选 HTTP CONNECT 代理。Docker Desktop 连接宿主 Clash 的示例为 `http://host.docker.internal:7890` |
 | `REELUCID_DATA_DIR` | 本地默认为 `.data`，镜像使用 `/data` |
 | `REELUCID_MODELS_DIR` | 数据目录下 `models` |
@@ -173,7 +188,7 @@ cd web && npm run check && npm run build
 | `REELUCID_ADAPTER_PLUGINS` | 可信 `module:Class` 入口，逗号分隔 |
 | `TMPDIR` | 镜像使用 `/data/work/tmp`，大文件不占 `/tmp` 内存盘 |
 
-下载、转录和文本 AI 各有自己的并发额度。同一素材的任务依次处理。无法探测容量时，调度器按 1 核、2 GiB 估算。默认 Compose 分配 4 核、6 GiB，资源充足时可并行跑两项 `small` 转录。CPU 使用率达到 80% 后，调度器暂停领取新任务。内存预留取 20% 和 384 MiB 两者中较高的值。用管理员 Token 请求 `GET /api/v1/capabilities`，可查看 `scheduler`、模型、代理和适配器状态。
+下载、转录、转码和文本 AI 各有自己的并发额度，转录和转码共享 CPU 预算。同一素材的任务依次处理。无法探测容量时，调度器按 1 核、2 GiB 估算。默认 Compose 分配 4 核、6 GiB，资源充足时可并行跑两项 `small` 转录。CPU 使用率达到 80% 后，调度器暂停领取新任务。内存预留取 20% 和 384 MiB 两者中较高的值。用管理员 Token 请求 `GET /api/v1/capabilities`，可查看 `scheduler`、模型、代理和适配器状态。
 
 单个媒体默认最长 4 小时，可在「模型与设置 → 资源限制」调整。`compose.yaml` 列出了 Compose 读取的项目级变量。应用运行时变量可在 Compose 服务的 `environment` 中设置。[默认 Compose 配置](compose.yaml)
 
@@ -197,6 +212,7 @@ curl -fsS http://127.0.0.1:8000/api/v1/health/ready
 | `SOURCE_ACCESS_REQUIRED`、`SOURCE_NOT_FOUND` | 检查作品能否访问并确认链接完整。需要会话时，在 Web 选择对应的站点凭据，或配置适用的可选组件。 |
 | `NETWORK_POLICY_BLOCKED` | 确认链接指向公网 HTTP/HTTPS，使用 80 或 443 端口，并检查来源域名的 DNS 结果。 |
 | `NO_AUDIO_TRACK` | 确认原片有音轨，或上传包含音轨的本地媒体。 |
+| `NO_VIDEO_TRACK` | MP4 转码须使用含视频轨的原片。音频素材可选 MP3 或 WAV。 |
 | HTTP 413、`STORAGE_EXHAUSTED` | 检查上传体积上限和数据卷剩余空间。 |
 
 ## 第三方许可

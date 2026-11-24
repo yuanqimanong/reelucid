@@ -10,13 +10,15 @@ from typing import Annotated
 from urllib.parse import urlsplit
 
 from fastapi import APIRouter, Header, Query, Response
+from fastapi.responses import JSONResponse
 
 from reelucid.api.runtime import ConfigDep, DatabaseDep, SecurityDep, ServiceDep
-from reelucid.api.schemas import AssetSource, JobRequest, UrlSource
+from reelucid.api.schemas import AssetSource, JobRequest, JobResult, UrlSource
 from reelucid.database import NewUrlAsset
 from reelucid.domain import TERMINAL, JsonObject, ReelucidError, choose_chunk_strategy
 from reelucid.files import contained, digest_json
 from reelucid.job_config import find_profile, settings_value, snapshot
+from reelucid.media import available_transcode_presets
 from reelucid.models import model_path, model_ready
 from reelucid.network import validate_url
 
@@ -39,8 +41,15 @@ async def create_job(
         return old
     raw_settings = await db.run(db.settings)
     current = settings_value(raw_settings)
-    profile = find_profile(current, body.processing_profile_id)
+    needs_transcript = any(op.type != "transcode" for op in body.operations)
+    profile = find_profile(current, body.processing_profile_id) if needs_transcript else None
+    presets = {op.options.preset for op in body.operations if op.type == "transcode"}
+    if presets and not presets.issubset(await asyncio.to_thread(available_transcode_presets)):
+        raise ReelucidError("CAPABILITY_UNAVAILABLE", "当前 FFmpeg 安装缺少所选转码预设。")
     for operation in body.operations:
+        if operation.type == "transcode":
+            continue
+        assert profile is not None
         if (
             operation.type == "visual_analyze" or operation.options.use_visual
         ) and operation.required:
@@ -56,7 +65,7 @@ async def create_job(
     reuse = None
     if isinstance(body.source, AssetSource):
         asset = await db.run(db.asset, body.source.asset_id)
-        if not any(op.type == "transcribe" for op in body.operations):
+        if needs_transcript and not any(op.type == "transcribe" for op in body.operations):
             reuse = await db.run(
                 db.transcript_for, asset["asset_id"], body.source.transcript_artifact_id
             )
@@ -66,8 +75,12 @@ async def create_job(
         asset_id = None
     # Pin the resolved transcript without changing the client request hash.
     request["options"]["transcript_artifact_id"] = reuse["artifact_id"] if reuse else None
-    if not reuse and not await asyncio.to_thread(
-        model_ready, model_path(runtime.models_dir, profile.model_id)
+    if (
+        profile is not None
+        and not reuse
+        and not await asyncio.to_thread(
+            model_ready, model_path(runtime.models_dir, profile.model_id)
+        )
     ):
         raise ReelucidError(
             "MODEL_NOT_READY", "本地 ASR 模型未安装，请在设置中安装并选择默认模型。"
@@ -83,9 +96,10 @@ async def create_job(
             credential_profile_id=body.source.credential_profile_id,
         )
         request["source"]["url"] = "[stored encrypted in asset]"
-    request["asr_chunk_strategy"] = choose_chunk_strategy(
-        runtime.asr_chunk_policy, body.options.language, profile.model_id
-    )
+    if profile is not None:
+        request["asr_chunk_strategy"] = choose_chunk_strategy(
+            runtime.asr_chunk_policy, body.options.language, profile.model_id
+        )
     job = await db.run(
         db.create_job,
         request,
@@ -146,10 +160,10 @@ async def delete_job(db: DatabaseDep, identifier: str) -> Response:
     return Response(status_code=204)
 
 
-@router.get("/jobs/{identifier}/result", tags=["Jobs"])
+@router.get("/jobs/{identifier}/result", tags=["Jobs"], response_model=JobResult)
 async def get_result(
     db: DatabaseDep, runtime: ConfigDep, identifier: str, include: str = ""
-) -> JsonObject:
+) -> JSONResponse:
     job = await db.run(db.job, identifier, private=True)
     if job["status"] not in TERMINAL:
         raise ReelucidError("RESULT_NOT_READY", "任务尚未完成，已就绪产物可从任务详情单独下载。")
@@ -174,4 +188,4 @@ async def get_result(
             result["transcript"] = json.loads(
                 await asyncio.to_thread(path.read_text, encoding="utf-8")
             )
-    return result
+    return JSONResponse(result)

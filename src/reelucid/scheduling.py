@@ -9,7 +9,7 @@ from reelucid.domain import JsonObject
 from reelucid.resources import ResourceSample
 
 MIB = 1024**2
-type Phase = Literal["download", "asr", "ai", "install"]
+type Phase = Literal["download", "asr", "transcode", "ai", "install"]
 MODEL_MEMORY_MIB = {
     "tiny": 640,
     "base": 768,
@@ -30,6 +30,8 @@ class Workload:
     def for_stage(cls, job: JsonObject, phase: Phase) -> Workload:
         if phase == "install":
             return cls(512 * MIB, phase)
+        if phase == "transcode":
+            return cls(768 * MIB, phase)
         if phase in {"download", "ai"}:
             return cls(128 * MIB, phase)
         request, settings = job["request"], job["snapshot"]
@@ -82,7 +84,7 @@ class Budget:
     def stage_limit(self, phase: Phase) -> int:
         if phase == "install":
             return 1
-        if phase == "asr":
+        if phase in {"asr", "transcode"}:
             return self.slots
         return min(2, self.slots)
 
@@ -96,7 +98,7 @@ class Budget:
         if sum(item.workload.phase == phase for item in self.active) >= self.stage_limit(phase):
             return None
         compute = [item for item in self.active if item.cpu_threads]
-        if phase in {"asr", "install"} and (
+        if phase in {"asr", "install", "transcode"} and (
             len(compute) >= self.slots
             or (workload.exclusive and compute)
             or any(item.workload.exclusive for item in compute)
@@ -125,10 +127,13 @@ def first_phase(job: JsonObject) -> Phase:
         return "install"
     request = job["request"]
     options = request.get("options", {})
+    operations = request.get("operations", [])
+    if operations and all(op["type"] == "transcode" for op in operations):
+        return "transcode" if job["has_local_source"] else "download"
     legacy_reuse = (
         "transcript_artifact_id" not in options
         and request.get("source", {}).get("kind") == "asset"
-        and not any(op["type"] == "transcribe" for op in request.get("operations", []))
+        and not any(op["type"] == "transcribe" for op in operations)
     )
     if options.get("transcript_artifact_id") or legacy_reuse:
         return "ai"

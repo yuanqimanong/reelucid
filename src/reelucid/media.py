@@ -6,9 +6,10 @@ import subprocess
 import tempfile
 import time
 import wave
+from functools import lru_cache
 from pathlib import Path
 
-from reelucid.domain import Cancelled, MediaInfo, ReelucidError
+from reelucid.domain import TRANSCODE_FORMATS, Cancelled, MediaInfo, ReelucidError, TranscodePreset
 from reelucid.ports import Cancellation
 
 
@@ -63,7 +64,7 @@ def probe(path: Path, cancelled: Cancellation = lambda: False) -> MediaInfo:
                 "-threads",
                 "1",
                 "-show_entries",
-                "format=duration,start_time,format_name:stream=codec_type,start_time,duration",
+                "format=duration,start_time,format_name:stream=codec_type,start_time,duration:stream_disposition=attached_pic",
                 "-of",
                 "json",
                 str(path),
@@ -86,11 +87,122 @@ def probe(path: Path, cancelled: Cancellation = lambda: False) -> MediaInfo:
     return MediaInfo(
         duration_ms=round(duration * 1000),
         has_audio=audio is not None,
-        has_video=any(s.get("codec_type") == "video" for s in streams),
+        has_video=any(
+            s.get("codec_type") == "video" and not s.get("disposition", {}).get("attached_pic")
+            for s in streams
+        ),
         format_name=format_name,
         source_origin_seconds=float(info.get("start_time") or 0),
         audio_start_seconds=float(audio.get("start_time") or 0) if audio else 0,
     )
+
+
+@lru_cache(maxsize=2)
+def _transcode_encoders(executable: str) -> set[bytes]:
+    listing = run_tool([executable, "-hide_banner", "-encoders"], lambda: False, timeout=5)
+    return {fields[1] for line in listing.splitlines() if len(fields := line.split()) > 1}
+
+
+def available_transcode_presets() -> list[TranscodePreset]:
+    executable = shutil.which("ffmpeg")
+    if not executable or not shutil.which("ffprobe"):
+        return []
+    try:
+        encoders = _transcode_encoders(executable)
+    except ReelucidError:
+        return []
+    requirements: dict[TranscodePreset, set[bytes]] = {
+        "audio_mp3": {b"libmp3lame"},
+        "audio_wav": {b"pcm_s16le"},
+        "video_mp4": {b"libx264", b"aac"},
+    }
+    return [preset for preset, required in requirements.items() if required <= encoders]
+
+
+def transcode(
+    source: Path,
+    destination: Path,
+    preset: TranscodePreset,
+    cancelled: Cancellation,
+    *,
+    cpu_threads: int,
+    max_duration_seconds: int,
+) -> MediaInfo:
+    media = probe(source, cancelled)
+    if media.duration_ms > max_duration_seconds * 1000:
+        raise ReelucidError("MEDIA_DURATION_LIMIT", "媒体超过实例允许的时长。")
+    if preset == "video_mp4":
+        if not media.has_video:
+            raise ReelucidError("NO_VIDEO_TRACK", "MP4 转码需要视频轨。")
+        streams = [
+            "-map",
+            "0:V:0",
+            "-map",
+            "0:a:0?",
+            "-c:v",
+            "libx264",
+            "-preset",
+            "fast",
+            "-crf",
+            "23",
+            "-vf",
+            "pad=ceil(iw/2)*2:ceil(ih/2)*2",
+            "-pix_fmt",
+            "yuv420p",
+            "-c:a",
+            "aac",
+            "-b:a",
+            "128k",
+            "-ac",
+            "2",
+            "-movflags",
+            "+faststart",
+        ]
+    else:
+        if not media.has_audio:
+            raise ReelucidError("NO_AUDIO_TRACK", "音频转码需要音轨。")
+        streams = ["-map", "0:a:0", "-vn", "-ac", "2", "-ar", "48000"]
+        if preset == "audio_mp3":
+            streams += ["-c:a", "libmp3lame", "-b:a", "192k"]
+        else:
+            streams += ["-c:a", "pcm_s16le", "-rf64", "auto"]
+
+    temporary = destination.with_suffix(f".pending.{TRANSCODE_FORMATS[preset]}")
+    try:
+        run_tool(
+            [
+                tool("ffmpeg"),
+                "-y",
+                "-v",
+                "error",
+                "-nostdin",
+                "-filter_threads",
+                "1",
+                "-protocol_whitelist",
+                "file,pipe",
+                "-threads",
+                str(cpu_threads),
+                "-i",
+                str(source),
+                *streams,
+                "-map_metadata",
+                "-1",
+                "-map_chapters",
+                "-1",
+                "-threads",
+                str(cpu_threads),
+                str(temporary),
+            ],
+            cancelled,
+        )
+        if cancelled():
+            raise Cancelled()
+        if not temporary.is_file() or not temporary.stat().st_size:
+            raise ReelucidError("INVALID_MEDIA", "转码未生成有效文件。")
+        temporary.replace(destination)
+    finally:
+        temporary.unlink(missing_ok=True)
+    return media
 
 
 def normalize(

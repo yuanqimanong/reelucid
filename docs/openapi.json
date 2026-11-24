@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Reelucid · 帧闻录",
-    "version": "1.0.1"
+    "version": "1.1.0"
   },
   "paths": {
     "/api/v1/auth/session": {
@@ -166,7 +166,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JsonObject"
+                  "$ref": "#/components/schemas/Capabilities"
                 }
               }
             }
@@ -324,10 +324,16 @@
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {}
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
               }
             }
+          },
+          "206": {
+            "description": "Partial Content"
           },
           "422": {
             "description": "Validation Error",
@@ -739,7 +745,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JsonObject"
+                  "$ref": "#/components/schemas/JobResult"
                 }
               }
             }
@@ -800,8 +806,10 @@
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {}
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
               }
             }
           },
@@ -892,10 +900,16 @@
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": {}
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
               }
             }
+          },
+          "206": {
+            "description": "Partial Content"
           },
           "422": {
             "description": "Validation Error",
@@ -1323,6 +1337,46 @@
         ],
         "title": "AgentPoll"
       },
+      "ArtifactReference": {
+        "properties": {
+          "artifact_id": {
+            "type": "string",
+            "title": "Artifact Id"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind",
+            "description": "转码产物的 kind 为 media。"
+          },
+          "format": {
+            "type": "string",
+            "title": "Format",
+            "description": "媒体格式为 mp3、wav 或 mp4。"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "title": "Size Bytes"
+          },
+          "sha256": {
+            "type": "string",
+            "title": "Sha256"
+          },
+          "content_url": {
+            "type": "string",
+            "title": "Content Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "artifact_id",
+          "kind",
+          "format",
+          "size_bytes",
+          "sha256",
+          "content_url"
+        ],
+        "title": "ArtifactReference"
+      },
       "AssetSource": {
         "properties": {
           "kind": {
@@ -1346,7 +1400,7 @@
               }
             ],
             "title": "Transcript Artifact Id",
-            "description": "从此素材已发布的指定文稿生成结果，仅适用于不含 transcribe 的任务。"
+            "description": "从此素材已发布的指定文稿生成文本结果，仅适用于不含 transcribe 的文本任务。"
           }
         },
         "additionalProperties": false,
@@ -1356,6 +1410,101 @@
           "asset_id"
         ],
         "title": "AssetSource"
+      },
+      "Capabilities": {
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "asr": {
+            "items": {
+              "$ref": "#/components/schemas/JsonObject"
+            },
+            "type": "array",
+            "title": "Asr"
+          },
+          "asr_chunk_policy": {
+            "type": "string",
+            "title": "Asr Chunk Policy"
+          },
+          "scheduler": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "adapters": {
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "type": "object",
+            "title": "Adapters"
+          },
+          "available_adapters": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Available Adapters"
+          },
+          "source_resolver": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "xhs_resolver": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "source_catalogue_url": {
+            "type": "string",
+            "title": "Source Catalogue Url"
+          },
+          "source_proxy_enabled": {
+            "type": "boolean",
+            "title": "Source Proxy Enabled"
+          },
+          "operations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Operations"
+          },
+          "transcode_presets": {
+            "items": {
+              "$ref": "#/components/schemas/TranscodePreset"
+            },
+            "type": "array",
+            "title": "Transcode Presets"
+          },
+          "visual": {
+            "type": "boolean",
+            "title": "Visual"
+          },
+          "offline": {
+            "type": "boolean",
+            "title": "Offline"
+          },
+          "max_upload_bytes": {
+            "type": "integer",
+            "title": "Max Upload Bytes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version",
+          "asr",
+          "asr_chunk_policy",
+          "scheduler",
+          "adapters",
+          "available_adapters",
+          "source_resolver",
+          "xhs_resolver",
+          "source_catalogue_url",
+          "source_proxy_enabled",
+          "operations",
+          "transcode_presets",
+          "visual",
+          "offline",
+          "max_upload_bytes"
+        ],
+        "title": "Capabilities"
       },
       "Completion": {
         "properties": {
@@ -1637,7 +1786,26 @@
           },
           "operations": {
             "items": {
-              "$ref": "#/components/schemas/Operation"
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/Operation"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscodeOperation"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "type",
+                "mapping": {
+                  "extract": "#/components/schemas/Operation",
+                  "qa": "#/components/schemas/Operation",
+                  "summarize": "#/components/schemas/Operation",
+                  "transcode": "#/components/schemas/TranscodeOperation",
+                  "transcribe": "#/components/schemas/Operation",
+                  "translate": "#/components/schemas/Operation",
+                  "visual_analyze": "#/components/schemas/Operation"
+                }
+              }
             },
             "type": "array",
             "maxItems": 8,
@@ -1654,6 +1822,94 @@
           "source"
         ],
         "title": "JobRequest"
+      },
+      "JobResult": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "title": "Schema Version"
+          },
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "asset_id": {
+            "type": "string",
+            "title": "Asset Id"
+          },
+          "transcript": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "source_video_available": {
+            "type": "boolean",
+            "title": "Source Video Available"
+          },
+          "artifacts": {
+            "items": {
+              "$ref": "#/components/schemas/ArtifactReference"
+            },
+            "type": "array",
+            "title": "Artifacts"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/JsonObject"
+            },
+            "type": "array",
+            "title": "Evidence"
+          },
+          "outputs": {
+            "items": {
+              "$ref": "#/components/schemas/JsonObject"
+            },
+            "type": "array",
+            "title": "Outputs",
+            "description": "成功的转码操作包含 artifact_id。"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/JsonObject"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "model": {
+            "$ref": "#/components/schemas/JsonObject"
+          }
+        },
+        "type": "object",
+        "required": [
+          "schema_version",
+          "job_id",
+          "status"
+        ],
+        "title": "JobResult"
+      },
+      "JobStatus": {
+        "type": "string",
+        "enum": [
+          "queued",
+          "running",
+          "cancelling",
+          "cancelled",
+          "succeeded",
+          "partially_succeeded",
+          "failed"
+        ],
+        "title": "JobStatus"
       },
       "JsonObject": {
         "additionalProperties": true,
@@ -1713,6 +1969,11 @@
             "pattern": "^[a-zA-Z0-9_-]{1,64}$",
             "title": "Id"
           },
+          "required": {
+            "type": "boolean",
+            "title": "Required",
+            "default": true
+          },
           "type": {
             "type": "string",
             "enum": [
@@ -1724,11 +1985,6 @@
               "visual_analyze"
             ],
             "title": "Type"
-          },
-          "required": {
-            "type": "boolean",
-            "title": "Required",
-            "default": true
           },
           "options": {
             "$ref": "#/components/schemas/OperationOptions"
@@ -2030,6 +2286,57 @@
         "additionalProperties": false,
         "type": "object",
         "title": "SystemSettings"
+      },
+      "TranscodeOperation": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+            "title": "Id"
+          },
+          "required": {
+            "type": "boolean",
+            "title": "Required",
+            "default": true
+          },
+          "type": {
+            "type": "string",
+            "const": "transcode",
+            "title": "Type"
+          },
+          "options": {
+            "$ref": "#/components/schemas/TranscodeOptions"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "options"
+        ],
+        "title": "TranscodeOperation"
+      },
+      "TranscodeOptions": {
+        "properties": {
+          "preset": {
+            "$ref": "#/components/schemas/TranscodePreset"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "preset"
+        ],
+        "title": "TranscodeOptions"
+      },
+      "TranscodePreset": {
+        "type": "string",
+        "enum": [
+          "audio_mp3",
+          "audio_wav",
+          "video_mp4"
+        ]
       },
       "UrlSource": {
         "properties": {

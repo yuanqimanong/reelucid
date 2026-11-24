@@ -60,6 +60,7 @@ export type Job = {
   finished_at?: string;
   error?: { message: string; code: string };
   warnings: string[];
+  effective_plan?: { type: string }[];
   artifacts?: Artifact[];
   stages?: { name: string; status: string }[];
 };
