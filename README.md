@@ -19,7 +19,7 @@ docker compose exec reelucid cat /data/secrets/admin_token
 
 ### 从 Docker Hub 拉取镜像
 
-在项目根目录的 `.env` 中设置 `REELUCID_IMAGE=yuanqimanong/reelucid:1.1.0`。使用自己的私有仓库时，先在部署机器上运行 `docker login`。
+在项目根目录的 `.env` 中设置 `REELUCID_IMAGE=yuanqimanong/reelucid:1.1.1`。使用自己的私有仓库时，先在部署机器上运行 `docker login`。
 
 ```bash
 docker compose pull reelucid
@@ -30,14 +30,14 @@ docker compose up -d --no-build --wait reelucid
 
 1. 在个人命名空间下创建 `reelucid` 镜像仓库，再创建权限为 `Read & Write` 的个人访问令牌。[创建仓库](https://docs.docker.com/docker-hub/repos/create/) · [创建令牌](https://docs.docker.com/security/access-tokens/)
 2. 打开 GitHub 仓库的 `Settings → Secrets and variables → Actions`。在 `Variables` 添加 `DOCKERHUB_USERNAME`，值为 Docker Hub 用户名。在 `Secrets` 添加 `DOCKERHUB_TOKEN`，值为个人访问令牌。
-3. 将工作流提交推送到 GitHub，在待发布提交上创建并推送与 `pyproject.toml` 版本一致的 Git 标签。例如，发布 `1.1.0` 时运行以下命令。
+3. 将工作流提交推送到 GitHub，在待发布提交上创建并推送与 `pyproject.toml` 版本一致的 Git 标签。例如，发布 `1.1.1` 时运行以下命令。
 
    ```bash
-   git tag v1.1.0
-   git push origin v1.1.0
+   git tag v1.1.1
+   git push origin v1.1.1
    ```
 
-GitHub Actions 在 Python、前端和容器就绪检查通过后推送 `你的DockerID/reelucid:1.1.0`。发布目标为 `linux/amd64`，镜像标签取自项目版本。[发布工作流](.github/workflows/ci.yml)
+GitHub Actions 在 Python、前端和容器 HTTP 验收通过后推送 `你的DockerID/reelucid:1.1.1`。随后从 Docker Hub 拉取镜像再验收一次。发布目标为 `linux/amd64`，镜像标签取自项目版本。[发布工作流](.github/workflows/ci.yml)
 
 ### Web 使用
 
@@ -174,7 +174,7 @@ cd web && npm run check && npm run build
 
 | 环境变量 | 默认值/作用 |
 |---|---|
-| `REELUCID_IMAGE` | Compose 镜像标签，默认 `reelucid:1.1.0` |
+| `REELUCID_IMAGE` | Compose 镜像标签，默认 `reelucid:1.1.1` |
 | `REELUCID_SOURCE_PROXY` | 可选 HTTP CONNECT 代理。Docker Desktop 连接宿主 Clash 的示例为 `http://host.docker.internal:7890` |
 | `REELUCID_DATA_DIR` | 本地默认为 `.data`，镜像使用 `/data` |
 | `REELUCID_MODELS_DIR` | 数据目录下 `models` |
@@ -189,6 +189,8 @@ cd web && npm run check && npm run build
 | `TMPDIR` | 镜像使用 `/data/work/tmp`，大文件不占 `/tmp` 内存盘 |
 
 下载、转录、转码和文本 AI 各有自己的并发额度，转录和转码共享 CPU 预算。同一素材的任务依次处理。无法探测容量时，调度器按 1 核、2 GiB 估算。默认 Compose 分配 4 核、6 GiB，资源充足时可并行跑两项 `small` 转录。CPU 使用率达到 80% 后，调度器暂停领取新任务。内存预留取 20% 和 384 MiB 两者中较高的值。用管理员 Token 请求 `GET /api/v1/capabilities`，可查看 `scheduler`、模型、代理和适配器状态。
+
+转码阶段的调度预留按任务中的转码预设计算。仅含 MP3 和 WAV 转码时预留 256 MiB，含 MP4 转码时预留 768 MiB。预留用于调度，容器硬上限由 `REELUCID_MEMORY_LIMIT` 控制。
 
 单个媒体默认最长 4 小时，可在「模型与设置 → 资源限制」调整。`compose.yaml` 列出了 Compose 读取的项目级变量。应用运行时变量可在 Compose 服务的 `environment` 中设置。[默认 Compose 配置](compose.yaml)
 
