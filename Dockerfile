@@ -40,6 +40,7 @@ RUN --mount=type=bind,source=docker/models,target=/seed,readonly \
     python -I /seed/preinstall.py /opt/reelucid-models/small
 
 FROM dependencies AS runtime
+LABEL org.opencontainers.image.version="1.1.2"
 COPY --from=small-model /opt/reelucid-models/small /opt/reelucid-models/small
 COPY README.md LICENSE ./
 COPY src/ ./src/

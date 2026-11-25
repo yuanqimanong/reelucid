@@ -2,7 +2,7 @@
 
 Reelucid 是一款可自行部署的音视频转录和转码工具。你可以上传本地文件，也可以提交视频 URL，让 Reelucid 下载媒体。语音在本地识别，生成的文稿和字幕带有原片时间戳。网页支持按文稿跳转播放、下载转码文件和配置独立的文本 AI 服务。
 
-可选文本任务包括摘要、翻译、提取和问答。OCR、视觉分析、来源字幕复用、完成回调、自动文件回收、直播和跨主机 worker 仍待实现。[API 功能清单](docs/api-coverage.md) · [OpenAPI](docs/openapi.json)
+可选文本任务包括摘要、翻译、提取和问答。OCR、视觉分析、来源字幕复用、完成回调、自动文件回收、直播和跨主机 worker 仍待实现。[API 功能清单](docs/api-coverage.md) · [OpenAPI](docs/openapi.json) · [更新记录](CHANGELOG.md)
 
 ## Docker 启动
 
@@ -19,7 +19,7 @@ docker compose exec reelucid cat /data/secrets/admin_token
 
 ### 从 Docker Hub 拉取镜像
 
-在项目根目录的 `.env` 中设置 `REELUCID_IMAGE=yuanqimanong/reelucid:1.1.1`。使用自己的私有仓库时，先在部署机器上运行 `docker login`。
+在项目根目录的 `.env` 中设置 `REELUCID_IMAGE=yuanqimanong/reelucid:1.1.2`。使用自己的私有仓库时，先在部署机器上运行 `docker login`。
 
 ```bash
 docker compose pull reelucid
@@ -30,14 +30,14 @@ docker compose up -d --no-build --wait reelucid
 
 1. 在个人命名空间下创建 `reelucid` 镜像仓库，再创建权限为 `Read & Write` 的个人访问令牌。[创建仓库](https://docs.docker.com/docker-hub/repos/create/) · [创建令牌](https://docs.docker.com/security/access-tokens/)
 2. 打开 GitHub 仓库的 `Settings → Secrets and variables → Actions`。在 `Variables` 添加 `DOCKERHUB_USERNAME`，值为 Docker Hub 用户名。在 `Secrets` 添加 `DOCKERHUB_TOKEN`，值为个人访问令牌。
-3. 将工作流提交推送到 GitHub，在待发布提交上创建并推送与 `pyproject.toml` 版本一致的 Git 标签。例如，发布 `1.1.1` 时运行以下命令。
+3. 将工作流提交推送到 GitHub，在待发布提交上创建并推送与 `pyproject.toml` 版本一致的 Git 标签。例如，确认候选提交及所有验收通过后，发布 `1.1.2` 时运行以下命令（推送标签会触发镜像发布）。
 
    ```bash
-   git tag v1.1.1
-   git push origin v1.1.1
+   git tag v1.1.2
+   git push origin v1.1.2
    ```
 
-GitHub Actions 在 Python、前端和容器 HTTP 验收通过后推送 `你的DockerID/reelucid:1.1.1`。随后从 Docker Hub 拉取镜像再验收一次。发布目标为 `linux/amd64`，镜像标签取自项目版本。[发布工作流](.github/workflows/ci.yml)
+GitHub Actions 在 Python、前端和容器 HTTP 验收通过后推送 `你的DockerID/reelucid:1.1.2`。验收包含来源 URL 鉴权、无缓存、HTTP 412 分类及容器重建后的持久化。随后从 Docker Hub 拉取镜像再验收一次。发布目标为 `linux/amd64`，镜像标签取自项目版本。[发布工作流](.github/workflows/ci.yml)
 
 ### Web 使用
 
@@ -95,6 +95,10 @@ curl -fsS -H "Authorization: Bearer $REELUCID_TOKEN" \
 ```
 
 结果默认返回文稿版本信息和下载链接。加上 `include=transcript` 可获取完整文稿，时间戳用原片上的整数毫秒表示。下载时，用同一个 Bearer Token 请求结果中的 `content_url`。原片和产物都可以用 HTTP Range 读取。幂等键保留 24 小时。用同一个键提交不同的请求会收到 409。
+
+### 查询来源 URL（v1.1.2）
+
+使用 URL 提交任务返回的 `asset_id`（不是 `job_id`），在管理员认证后查询已保存的原始链接，即使下载失败也可查询。返回内容可能包含签名或访问令牌，请勿写入日志。完整示例和错误语义见 [来源 URL API](docs/source-url-api.md)。
 
 ### 媒体转码
 
@@ -174,7 +178,7 @@ cd web && npm run check && npm run build
 
 | 环境变量 | 默认值/作用 |
 |---|---|
-| `REELUCID_IMAGE` | Compose 镜像标签，默认 `reelucid:1.1.1` |
+| `REELUCID_IMAGE` | Compose 镜像标签，默认 `reelucid:1.1.2` |
 | `REELUCID_SOURCE_PROXY` | 可选 HTTP CONNECT 代理。Docker Desktop 连接宿主 Clash 的示例为 `http://host.docker.internal:7890` |
 | `REELUCID_DATA_DIR` | 本地默认为 `.data`，镜像使用 `/data` |
 | `REELUCID_MODELS_DIR` | 数据目录下 `models` |
