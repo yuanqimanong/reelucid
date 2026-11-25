@@ -18,6 +18,7 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - run: uv sync --locked --extra server
       - run: uv lock --check
+      - run: uv run --locked --extra server python scripts/check_release_version.py
       - run: uv run --locked --extra server ruff check src tests
       - run: uv run --locked --extra server ruff format --check src tests
       - run: uv run --locked --extra server pyright
@@ -59,12 +60,20 @@ jobs:
         with:
           context: .
           push: false
+          platforms: linux/amd64
+          tags: reelucid:ci
+          load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      - name: Verify candidate image over HTTP
+        run: bash scripts/smoke_release_image.sh reelucid:ci never
   publish:
     name: Publish to Docker Hub
     if: github.event_name == 'push' && github.ref_type == 'tag'
     needs: [python, web]
+    concurrency:
+      group: dockerhub-reelucid-${{ github.ref_name }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     env:
       REELUCID_IMAGE: reelucid:release
@@ -77,16 +86,7 @@ jobs:
         env:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          python - <<'PY'
-          import os
-          import tomllib
-
-          with open("pyproject.toml", "rb") as project:
-              version = tomllib.load(project)["project"]["version"]
-          tag = os.environ["RELEASE_TAG"]
-          if tag != f"v{version}":
-              raise SystemExit(f"Release tag {tag} must match pyproject.toml version {version}")
-          PY
+          python scripts/check_release_version.py --tag "$RELEASE_TAG"
           echo "version=${RELEASE_TAG#v}" >> "$GITHUB_OUTPUT"
       - uses: docker/setup-buildx-action@v3
       - uses: docker/build-push-action@v6
@@ -97,18 +97,7 @@ jobs:
           load: true
           cache-from: type=gha
       - name: Verify release image over HTTP before pushing
-        run: |
-          docker compose up -d --no-build --pull never --wait --wait-timeout 150 reelucid
-          fixture="$RUNNER_TEMP/reelucid-speech.mkv"
-          docker compose exec -T reelucid ffmpeg -v error -y \
-            -f lavfi -i 'color=c=black:s=160x120:r=10' \
-            -f lavfi -i "flite=text='The meeting is on Monday. Please send the budget report before Friday.':voice=slt" \
-            -shortest -c:v ffv1 -c:a pcm_s16le /data/work/tmp/reelucid-speech.mkv
-          docker compose cp reelucid:/data/work/tmp/reelucid-speech.mkv "$fixture"
-          REELUCID_TOKEN="$(docker compose exec -T reelucid cat /data/secrets/admin_token)"
-          echo "::add-mask::$REELUCID_TOKEN"
-          export REELUCID_TOKEN
-          python tests/smoke_transcode_http.py "$fixture"
+        run: bash scripts/smoke_release_image.sh "$REELUCID_IMAGE" never
       - name: Push versioned image
         env:
           DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
@@ -120,19 +109,27 @@ jobs:
           printf '%s' "$DOCKERHUB_TOKEN" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
           image="docker.io/${DOCKERHUB_USERNAME}/reelucid:${VERSION}"
           docker tag "$REELUCID_IMAGE" "$image"
+          repository="${DOCKERHUB_USERNAME}/reelucid"
+          pull_token="$(curl -fsS --user "$DOCKERHUB_USERNAME:$DOCKERHUB_TOKEN" \
+            --get --data-urlencode 'service=registry.docker.io' \
+            --data-urlencode "scope=repository:$repository:pull" \
+            https://auth.docker.io/token | jq -er '.token | select(type == "string" and length > 0)')"
+          manifest="$RUNNER_TEMP/reelucid-manifest.json"
+          status="$(curl -sS -o "$manifest" -w '%{http_code}' \
+            -H "Authorization: Bearer $pull_token" \
+            -H 'Accept: application/vnd.oci.image.index.v1+json, application/vnd.docker.distribution.manifest.list.v2+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json' \
+            "https://registry-1.docker.io/v2/$repository/manifests/$VERSION")"
+          if [[ "$status" != 404 ]] || ! jq -e 'any(.errors[]?; .code == "MANIFEST_UNKNOWN")' "$manifest" >/dev/null; then
+            echo "Refusing to push $image: missing manifest not confirmed (HTTP $status)." >&2
+            exit 1
+          fi
           docker push "$image"
       - name: Verify published image over HTTP
         env:
           DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
           VERSION: ${{ steps.release.outputs.version }}
         run: |
-          docker compose down --volumes
-          export REELUCID_IMAGE="docker.io/${DOCKERHUB_USERNAME}/reelucid:${VERSION}"
-          docker compose up -d --no-build --pull always --wait --wait-timeout 150 reelucid
-          REELUCID_TOKEN="$(docker compose exec -T reelucid cat /data/secrets/admin_token)"
-          echo "::add-mask::$REELUCID_TOKEN"
-          export REELUCID_TOKEN
-          python tests/smoke_transcode_http.py "$RUNNER_TEMP/reelucid-speech.mkv"
-      - name: Print release container logs
-        if: failure()
-        run: docker compose logs --no-color reelucid
+          bash scripts/smoke_release_image.sh "docker.io/${DOCKERHUB_USERNAME}/reelucid:${VERSION}" always
+      - name: Logout from Docker Hub
+        if: always()
+        run: docker logout

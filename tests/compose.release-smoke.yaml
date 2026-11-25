@@ -1,0 +1,22 @@
+# Test only. Always combine with the root compose.yaml under a fresh project name.
+services:
+  reelucid:
+    environment:
+      REELUCID_SOURCE_PROXY: http://source-fixture:18081
+    depends_on:
+      source-fixture:
+        condition: service_healthy
+  source-fixture:
+    image: ${REELUCID_IMAGE:?Set a local or published candidate image}
+    command: [python, -u, /source_412_proxy.py]
+    volumes:
+      - ./scripts/source_412_proxy.py:/source_412_proxy.py:ro
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: [CMD, python, -c, "import socket; socket.create_connection(('127.0.0.1', 18081), 2).close()"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
