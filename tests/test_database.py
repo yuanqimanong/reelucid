@@ -84,10 +84,12 @@ def test_pyp_purge_cleans_job_files_and_keeps_shared_assets(db: Database, tmp_pa
             )
         )
     with pytest.raises(ReelucidError, match="正在使用"):
-        db.purge_pyp_job(tmp_path, first_key, True, source)
+        db.purge_pyp_job(tmp_path, first_key, False, source)
     db.cancel(last)
     high = db.event_high()
-    assert db.purge_pyp_job(tmp_path, first_key, True, source) == {
+    with pytest.raises(ReelucidError, match="尚未清理"):
+        db.purge_pyp_job(tmp_path, last_key, True, source)
+    assert db.purge_pyp_job(tmp_path, first_key, False, source) == {
         "removed_job": True,
         "removed_assets": 0,
     }

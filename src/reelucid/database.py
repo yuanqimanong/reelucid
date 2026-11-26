@@ -670,6 +670,21 @@ class Database:
         lookup = select(JobRow).where(JobRow.idem_key == key)
         with self.transaction() as session:
             job = session.scalar(lookup)
+            assets = {uploaded_asset_id, job.asset_id if job else None} - {None}
+            if delete_source and assets:
+                pending = session.scalar(
+                    select(JobRow.id)
+                    .where(
+                        JobRow.asset_id.in_(assets),
+                        JobRow.idem_key.like("pyp-%"),
+                        JobRow.idem_key != key,
+                    )
+                    .limit(1)
+                )
+                if pending:
+                    raise ReelucidError(
+                        "JOB_ACTIVE", "同一素材的其他 PYP 任务尚未清理。", retryable=True
+                    )
             if job is not None:
                 busy_peer = job.asset_id and session.scalar(
                     select(JobRow.id)
@@ -689,9 +704,7 @@ class Database:
         try:
             with self.transaction() as session:
                 job = session.scalar(lookup)
-                assets = {uploaded_asset_id}
                 if job is not None:
-                    assets.add(job.asset_id)
                     for directory in ("artifacts", "work"):
                         self._remove_directory(data_dir / directory, job.id)
                     for model in (ArtifactRow, ChunkRow, EventRow, StageRow):
@@ -700,7 +713,7 @@ class Database:
                     session.flush()
                 removed_assets = 0
                 if delete_source:
-                    for identifier in assets - {None}:
+                    for identifier in assets:
                         asset = session.get(AssetRow, identifier)
                         if asset is None or session.scalar(
                             select(JobRow.id).where(JobRow.asset_id == asset.id).limit(1)
