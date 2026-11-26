@@ -1,7 +1,9 @@
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
 
+from reelucid import __version__
 from reelucid.bilibili import BilibiliPublicIE
 from reelucid.domain import ReelucidError
 from reelucid.network import validate_url
@@ -18,6 +20,8 @@ def test_part_selection_uses_selected_cid_and_source_duration(
     ) -> Any:
         queries.append(query)
         assert headers["Referer"] == "https://www.bilibili.com/"
+        assert headers["User-Agent"] == f"Reelucid/{__version__}"
+        assert headers["Accept"] == "application/json"
         if url.endswith("/view"):
             return {
                 "code": 0,
@@ -48,11 +52,24 @@ def test_part_selection_uses_selected_cid_and_source_duration(
         }
 
     monkeypatch.setattr(extractor, "_download_json", download)
-    info = extractor._real_extract("https://www.bilibili.com/video/BVfixture?p=2")  # pyright: ignore[reportPrivateUsage]
+
+    def resolve_short_link(
+        url: str, _identifier: str, *, headers: dict[str, str]
+    ) -> SimpleNamespace:
+        assert url == "https://b23.tv/Test"
+        assert headers["User-Agent"] == f"Reelucid/{__version__}"
+        return SimpleNamespace(url="https://www.bilibili.com/video/BVfixture?p=2")
+
+    monkeypatch.setattr(extractor, "_request_webpage", resolve_short_link)
+    info = extractor._real_extract("https://b23.tv/Test")  # pyright: ignore[reportPrivateUsage]
     assert queries[1]["cid"] == "2"
     assert info["duration"] == 15 and info["id"] == "BVfixture_p2"
     assert info["formats"][0]["acodec"] == "none"
     assert info["formats"][1]["vcodec"] == "none"
+    assert info["formats"][1]["http_headers"] == {
+        "Referer": "https://www.bilibili.com/",
+        "User-Agent": f"Reelucid/{__version__}",
+    }
     extractor._real_extract("https://www.bilibili.com/video/av123?p=2")  # pyright: ignore[reportPrivateUsage]
     assert queries[-2] == {"aid": "123"}
     assert queries[-1]["bvid"] == "BVfixture" and "aid" not in queries[-1]

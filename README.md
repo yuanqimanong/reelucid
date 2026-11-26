@@ -19,7 +19,7 @@ docker compose exec reelucid cat /data/secrets/admin_token
 
 ### 从 Docker Hub 拉取镜像
 
-在项目根目录的 `.env` 中设置 `REELUCID_IMAGE=yuanqimanong/reelucid:1.1.2`。使用自己的私有仓库时，先在部署机器上运行 `docker login`。
+在项目根目录的 `.env` 中设置 `REELUCID_IMAGE=yuanqimanong/reelucid:1.1.3`。使用自己的私有仓库时，先在部署机器上运行 `docker login`。
 
 ```bash
 docker compose pull reelucid
@@ -30,14 +30,14 @@ docker compose up -d --no-build --wait reelucid
 
 1. 在个人命名空间下创建 `reelucid` 镜像仓库，再创建权限为 `Read & Write` 的个人访问令牌。[创建仓库](https://docs.docker.com/docker-hub/repos/create/) · [创建令牌](https://docs.docker.com/security/access-tokens/)
 2. 打开 GitHub 仓库的 `Settings → Secrets and variables → Actions`。在 `Variables` 添加 `DOCKERHUB_USERNAME`，值为 Docker Hub 用户名。在 `Secrets` 添加 `DOCKERHUB_TOKEN`，值为个人访问令牌。
-3. 将工作流提交推送到 GitHub，在待发布提交上创建并推送与 `pyproject.toml` 版本一致的 Git 标签。例如，确认候选提交及所有验收通过后，发布 `1.1.2` 时运行以下命令（推送标签会触发镜像发布）。
+3. 将工作流提交推送到 GitHub，在待发布提交上创建并推送与 `pyproject.toml` 版本一致的 Git 标签。例如，确认候选提交及所有验收通过后，发布 `1.1.3` 时运行以下命令（推送标签会触发镜像发布）。
 
    ```bash
-   git tag v1.1.2
-   git push origin v1.1.2
+   git tag v1.1.3
+   git push origin v1.1.3
    ```
 
-GitHub Actions 在 Python、前端和容器 HTTP 验收通过后推送 `你的DockerID/reelucid:1.1.2`。验收包含来源 URL 鉴权、无缓存、HTTP 412 分类及容器重建后的持久化。随后从 Docker Hub 拉取镜像再验收一次。发布目标为 `linux/amd64`，镜像标签取自项目版本。[发布工作流](.github/workflows/ci.yml)
+GitHub Actions 在 Python、前端和容器 HTTP 验收通过后推送 `你的DockerID/reelucid:1.1.3`。验收包含来源 URL 鉴权、无缓存、HTTP 412 分类及容器重建后的持久化。随后从 Docker Hub 拉取镜像再验收一次。发布目标为 `linux/amd64`，镜像标签取自项目版本。[发布工作流](.github/workflows/ci.yml)
 
 ### Web 使用
 
@@ -178,7 +178,7 @@ cd web && npm run check && npm run build
 
 | 环境变量 | 默认值/作用 |
 |---|---|
-| `REELUCID_IMAGE` | Compose 镜像标签，默认 `reelucid:1.1.2` |
+| `REELUCID_IMAGE` | Compose 镜像标签，默认 `reelucid:1.1.3` |
 | `REELUCID_SOURCE_PROXY` | 可选 HTTP CONNECT 代理。Docker Desktop 连接宿主 Clash 的示例为 `http://host.docker.internal:7890` |
 | `REELUCID_DATA_DIR` | 本地默认为 `.data`，镜像使用 `/data` |
 | `REELUCID_MODELS_DIR` | 数据目录下 `models` |
