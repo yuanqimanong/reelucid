@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import Annotated, Literal, Required, Self, TypedDict
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -36,6 +37,12 @@ class AssetSource(Strict):
         exclude_if=lambda value: value is None,
         description="从此素材已发布的指定文稿生成文本结果，仅适用于不含 transcribe 的文本任务。",
     )
+
+
+class PurgePypJob(Strict):
+    task_id: UUID
+    delete_source: bool = False
+    asset_id: str | None = Field(default=None, pattern=r"^ast_[a-f0-9]{32}$")
 
 
 class OperationOptions(Strict):

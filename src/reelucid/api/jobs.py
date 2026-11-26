@@ -9,11 +9,12 @@ from pathlib import Path
 from typing import Annotated
 from urllib.parse import urlsplit
 
-from fastapi import APIRouter, Header, Query, Response
+from fastapi import APIRouter, Depends, Header, Query, Response
 from fastapi.responses import JSONResponse
 
+from reelucid.api.auth import require_bearer
 from reelucid.api.runtime import ConfigDep, DatabaseDep, SecurityDep, ServiceDep
-from reelucid.api.schemas import AssetSource, JobRequest, JobResult, UrlSource
+from reelucid.api.schemas import AssetSource, JobRequest, JobResult, PurgePypJob, UrlSource
 from reelucid.database import NewUrlAsset
 from reelucid.domain import TERMINAL, JsonObject, ReelucidError, choose_chunk_strategy
 from reelucid.files import contained, digest_json
@@ -158,6 +159,17 @@ async def retry_job(db: DatabaseDep, identifier: str) -> JsonObject:
 async def delete_job(db: DatabaseDep, identifier: str) -> Response:
     await db.run(db.delete, identifier)
     return Response(status_code=204)
+
+
+@router.post("/maintenance/pyp/purge-job", tags=["Jobs"], dependencies=[Depends(require_bearer)])
+async def purge_pyp_job(db: DatabaseDep, runtime: ConfigDep, body: PurgePypJob) -> JsonObject:
+    return await db.run(
+        db.purge_pyp_job,
+        runtime.data_dir,
+        "pyp-" + body.task_id.hex,
+        body.delete_source,
+        body.asset_id,
+    )
 
 
 @router.get("/jobs/{identifier}/result", tags=["Jobs"], response_model=JobResult)

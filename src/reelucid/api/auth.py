@@ -17,6 +17,14 @@ session_router = APIRouter()
 bearer = HTTPBearer(auto_error=False)
 
 
+async def require_bearer(
+    security: SecurityDep,
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer)],
+) -> None:
+    if credentials is None or not security.valid_token(credentials.credentials):
+        raise HTTPException(401, "Authentication required", headers={"WWW-Authenticate": "Bearer"})
+
+
 async def authenticated(
     security: SecurityDep,
     request: Request,

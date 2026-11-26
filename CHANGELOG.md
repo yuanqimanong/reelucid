@@ -1,5 +1,11 @@
 # 更新记录
 
+## 1.1.4
+
+- PYP 可用管理员 Bearer Token 按任务 UUID 回收 Reelucid 的任务记录、产物和工作目录。仍有任务引用的原件保留，清理可重复调用。
+- 新增同机部署的 `compose.pyp.yaml`，将 Reelucid 产物集中到 `/data/apps/pyp_data/reelucid/artifacts`。
+- 服务启动时升级 SQLite 事件表，物理删除任务后事件游标继续递增。
+
 ## 1.1.2
 
 相对于 `v1.1.1`，本版本包含 [PR #2](https://github.com/yuanqimanong/reelucid/pull/2) 的两项功能变更，以及版本同步和发布验收改进。
