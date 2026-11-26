@@ -19,7 +19,7 @@ docker compose exec reelucid cat /data/secrets/admin_token
 
 ### 从 Docker Hub 拉取镜像
 
-在项目根目录的 `.env` 中设置 `REELUCID_IMAGE=yuanqimanong/reelucid:1.1.3`。使用自己的私有仓库时，先在部署机器上运行 `docker login`。
+在项目根目录的 `.env` 中设置 `REELUCID_IMAGE=yuanqimanong/reelucid:1.1.5`。使用自己的私有仓库时，先在部署机器上运行 `docker login`。
 
 ```bash
 docker compose pull reelucid
@@ -178,7 +178,8 @@ cd web && npm run check && npm run build
 
 | 环境变量 | 默认值/作用 |
 |---|---|
-| `REELUCID_IMAGE` | Compose 镜像标签，默认 `reelucid:1.1.4` |
+| `REELUCID_IMAGE` | 镜像标签。源码 Compose 默认 `reelucid:1.1.5`，部署脚本默认 `yuanqimanong/reelucid:1.1.5` |
+| `REELUCID_ARTIFACTS_DIR` | 可选宿主机产物目录的绝对路径，留空时使用数据卷。容器内路径为 `/data/artifacts` |
 | `REELUCID_SOURCE_PROXY` | 可选 HTTP CONNECT 代理。Docker Desktop 连接宿主 Clash 的示例为 `http://host.docker.internal:7890` |
 | `REELUCID_DATA_DIR` | 本地默认为 `.data`，镜像使用 `/data` |
 | `REELUCID_MODELS_DIR` | 数据目录下 `models` |
@@ -198,10 +199,24 @@ cd web && npm run check && npm run build
 
 单个媒体默认最长 4 小时，可在「模型与设置 → 资源限制」调整。`compose.yaml` 列出了 Compose 读取的项目级变量。应用运行时变量可在 Compose 服务的 `environment` 中设置。[默认 Compose 配置](compose.yaml)
 
-与 PYP 同机部署时，可在启动命令中同时使用 `-f compose.yaml -f compose.pyp.yaml`。
-此配置将 `/data/artifacts` 绑定到宿主机 `/data/apps/pyp_data/reelucid/artifacts`，可用
-`REELUCID_ARTIFACTS_DIR` 指定其他宿主机路径。迁移已有实例时，等任务结束并停止 Reelucid 后迁移原产物目录，
-使容器内的 `/data/artifacts` 路径保持一致。挂载目录需能被 Reelucid 用户 UID 10001 写入。
+### 用 Docker Hub 镜像部署
+
+把 [部署脚本](scripts/deploy.sh) 和 [.env 示例](.env.example) 放到 Linux Docker 宿主机上的同一部署目录。
+按示例建立 `.env`，每行用 Docker 的 `KEY=VALUE` 格式。接管已有的 `docker run` 实例时，填写现有容器名、
+命名卷、监听地址和接入网络，以及原本注入的运行时环境变量。
+
+```bash
+bash deploy.sh --pull-only  # 只下载 .env 指定的镜像
+bash deploy.sh              # 拉取镜像并切换容器，等待探活
+```
+
+修改 `REELUCID_ARTIFACTS_DIR` 后，再运行部署脚本。等任务结束后，脚本会停容器、复制并校验旧产物，
+再挂载目标目录。新目录须为空或与当前产物内容一致。历史任务通过 `/data/artifacts` 继续读取产物。
+原目录保留为回退副本。启动探活失败时，脚本会恢复原容器。
+
+使用 Compose 的实例可设置 `REELUCID_ARTIFACTS_DIR`，并在命令中加上
+`-f compose.yaml -f compose.artifacts.yaml`。已有实例首次启用此挂载或改路径时，先停容器，
+复制并校验旧产物，再启动。宿主机挂载目录需允许 Reelucid 用户 UID 10001 写入。
 
 将 `REELUCID_SOURCE_PROXY` 写入项目根目录的 `.env`，再运行 `docker compose up -d --no-deps reelucid` 应用设置。代理用于视频来源网页及媒体请求，外部解析服务 API、ASR 权重下载和文本 AI 各自使用独立客户端。
 

@@ -1,5 +1,10 @@
 # 更新记录
 
+## 1.1.5
+
+- 宿主机产物目录可通过 `.env` 的 `REELUCID_ARTIFACTS_DIR` 配置，Docker Compose 也可选用通用产物挂载。
+- 新增 Docker Hub 拉取和部署脚本。切换产物目录时校验复制内容，启动失败时恢复原容器。
+
 ## 1.1.4
 
 - PYP 可用管理员 Bearer Token 按任务 UUID 回收 Reelucid 的任务记录、产物和工作目录。仍有任务引用的原件保留，清理可重复调用。
