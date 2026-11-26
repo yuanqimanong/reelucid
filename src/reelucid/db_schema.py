@@ -86,6 +86,7 @@ class ArtifactRow(Base):
 
 class EventRow(Base):
     __tablename__ = "events"
+    __table_args__ = {"sqlite_autoincrement": True}
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     job_id: Mapped[str] = mapped_column(ForeignKey("jobs.id"), index=True)
     type: Mapped[str]

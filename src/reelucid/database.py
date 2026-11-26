@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import shutil
 import time
 import uuid
 from collections.abc import Callable, Generator
@@ -13,7 +14,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from sqlalchemy import create_engine, event, func, or_, select
+from sqlalchemy import create_engine, delete, event, func, or_, select, text
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 
@@ -33,6 +34,7 @@ from reelucid.domain import (
     ReelucidError,
     check_transition,
 )
+from reelucid.files import contained
 from reelucid.settings import SystemSettings
 
 
@@ -575,7 +577,9 @@ class Database:
 
     def event_high(self) -> int:
         with Session(self.engine) as session:
-            return session.scalar(select(func.max(EventRow.id))) or 0
+            return int(
+                session.scalar(text("SELECT seq FROM sqlite_sequence WHERE name = 'events'")) or 0
+            )
 
     def fail(self, job_id: str, lease: str, error: JsonObject) -> None:
         with self.transaction() as session:
@@ -648,6 +652,81 @@ class Database:
             if row.status not in TERMINAL:
                 raise ReelucidError("JOB_ACTIVE", "请先取消任务，再删除记录。")
             row.deleted = True
+
+    @staticmethod
+    def _remove_directory(root: Path, identifier: str) -> None:
+        target = root / identifier
+        if not identifier or target.parent != root or contained(root, target) != target:
+            raise ReelucidError("INVALID_PATH", "待清理目录不在当前任务的存储范围内。")
+        try:
+            shutil.rmtree(target)
+        except FileNotFoundError:
+            if target.exists():
+                raise
+
+    def purge_pyp_job(
+        self, data_dir: Path, key: str, delete_source: bool, uploaded_asset_id: str | None
+    ) -> JsonObject:
+        lookup = select(JobRow).where(JobRow.idem_key == key)
+        with self.transaction() as session:
+            job = session.scalar(lookup)
+            assets = {uploaded_asset_id, job.asset_id if job else None} - {None}
+            if delete_source and assets:
+                pending = session.scalar(
+                    select(JobRow.id)
+                    .where(
+                        JobRow.asset_id.in_(assets),
+                        JobRow.idem_key.like("pyp-%"),
+                        JobRow.idem_key != key,
+                    )
+                    .limit(1)
+                )
+                if pending:
+                    raise ReelucidError(
+                        "JOB_ACTIVE", "同一素材的其他 PYP 任务尚未清理。", retryable=True
+                    )
+            if job is not None:
+                busy_peer = job.asset_id and session.scalar(
+                    select(JobRow.id)
+                    .where(
+                        JobRow.asset_id == job.asset_id,
+                        JobRow.id != job.id,
+                        JobRow.status.not_in(TERMINAL),
+                    )
+                    .limit(1)
+                )
+                if job.status not in TERMINAL or busy_peer:
+                    raise ReelucidError(
+                        "JOB_ACTIVE", "有任务正在使用此素材，结束后再清理。", retryable=True
+                    )
+                # Persist before touching files so a failed cleanup stays hidden and can be retried.
+                job.deleted = True
+        try:
+            with self.transaction() as session:
+                job = session.scalar(lookup)
+                if job is not None:
+                    for directory in ("artifacts", "work"):
+                        self._remove_directory(data_dir / directory, job.id)
+                    for model in (ArtifactRow, ChunkRow, EventRow, StageRow):
+                        session.execute(delete(model).where(model.job_id == job.id))
+                    session.delete(job)
+                    session.flush()
+                removed_assets = 0
+                if delete_source:
+                    for identifier in assets:
+                        asset = session.get(AssetRow, identifier)
+                        if asset is None or session.scalar(
+                            select(JobRow.id).where(JobRow.asset_id == asset.id).limit(1)
+                        ):
+                            continue
+                        self._remove_directory(data_dir / "assets", asset.id)
+                        session.delete(asset)
+                        removed_assets += 1
+                return {"removed_job": job is not None, "removed_assets": removed_assets}
+        except OSError as exc:
+            raise ReelucidError(
+                "STORAGE_CLEANUP_FAILED", "文件暂时无法清理。", retryable=True
+            ) from exc
 
     @staticmethod
     def artifact_dict(row: ArtifactRow, *, private: bool = False) -> JsonObject:

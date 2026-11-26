@@ -5,6 +5,7 @@
 | 功能 | Web 入口 | HTTP 方法和路径 | 鉴权 | 所需配置或前提 |
 | --- | --- | --- | --- | --- |
 | 存活和就绪 | 部署健康检查 | `GET /health/live`、`GET /health/ready` | 公开 | 就绪检查覆盖 API 的后台任务生命周期。 |
+| PYP 回收 | 物理删除已结束的 PYP 任务 | `POST /maintenance/pyp/purge-job` | 管理令牌 | 按 PYP 任务 UUID 查找受管任务，清理产物和工作目录。可回收无人引用的原件，重复调用安全。 |
 | 登录、退出 | 登录页、退出工作台 | `POST /auth/session`、`DELETE /auth/session` | 登录请求体含管理员 `token`。退出需管理员会话或 Bearer | 启动时生成或显式注入管理员令牌。 |
 | 发现能力 | 工作台初始化 | `GET /capabilities` | 管理员 | 返回模型状态、操作、转码预设、调度与适配器状态。 |
 | 查询支持的来源 | API | `GET /source-platforms` | 管理员 | 列出 yt-dlp 提取器及上游维护标记。单条 URL 的可用性在下载时确定。 |

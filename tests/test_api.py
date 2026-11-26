@@ -4,6 +4,7 @@ import time
 from collections.abc import Generator
 from contextlib import closing
 from pathlib import Path
+from uuid import uuid4
 
 import pytest
 from fastapi.testclient import TestClient
@@ -66,6 +67,17 @@ def client(tmp_path: Path) -> Generator[TestClient]:
         token = (tmp_path / "secrets/admin_token").read_text().strip()
         http.headers["Authorization"] = f"Bearer {token}"
         yield http
+
+
+def test_pyp_purge_requires_a_bearer_and_is_idempotent(client: TestClient) -> None:
+    endpoint = "/api/v1/maintenance/pyp/purge-job"
+    body = {"task_id": str(uuid4())}
+    auth = client.headers.pop("Authorization")
+    assert client.post(endpoint, json=body).status_code == 401
+    client.headers["Authorization"] = auth
+    result = client.post(endpoint, json=body)
+    assert result.status_code == 200
+    assert result.json() == {"removed_job": False, "removed_assets": 0}
 
 
 def test_web_fallback_keeps_the_api_namespace_and_asset_mount(tmp_path: Path) -> None:

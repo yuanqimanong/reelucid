@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Reelucid · 帧闻录",
-    "version": "1.1.3"
+    "version": "1.1.4"
   },
   "paths": {
     "/api/v1/auth/session": {
@@ -755,6 +755,52 @@
             }
           }
         }
+      }
+    },
+    "/api/v1/maintenance/pyp/purge-job": {
+      "post": {
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "Purge Pyp Job",
+        "operationId": "purge_pyp_job_api_v1_maintenance_pyp_purge_job_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurgePypJob"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonObject"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/jobs/{identifier}/result": {
@@ -2235,6 +2281,38 @@
           "base_url"
         ],
         "title": "Provider"
+      },
+      "PurgePypJob": {
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Task Id"
+          },
+          "delete_source": {
+            "type": "boolean",
+            "title": "Delete Source",
+            "default": false
+          },
+          "asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^ast_[a-f0-9]{32}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Asset Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "task_id"
+        ],
+        "title": "PurgePypJob"
       },
       "ReportedStates": {
         "properties": {

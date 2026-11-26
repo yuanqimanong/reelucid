@@ -178,7 +178,7 @@ cd web && npm run check && npm run build
 
 | 环境变量 | 默认值/作用 |
 |---|---|
-| `REELUCID_IMAGE` | Compose 镜像标签，默认 `reelucid:1.1.3` |
+| `REELUCID_IMAGE` | Compose 镜像标签，默认 `reelucid:1.1.4` |
 | `REELUCID_SOURCE_PROXY` | 可选 HTTP CONNECT 代理。Docker Desktop 连接宿主 Clash 的示例为 `http://host.docker.internal:7890` |
 | `REELUCID_DATA_DIR` | 本地默认为 `.data`，镜像使用 `/data` |
 | `REELUCID_MODELS_DIR` | 数据目录下 `models` |
@@ -198,6 +198,11 @@ cd web && npm run check && npm run build
 
 单个媒体默认最长 4 小时，可在「模型与设置 → 资源限制」调整。`compose.yaml` 列出了 Compose 读取的项目级变量。应用运行时变量可在 Compose 服务的 `environment` 中设置。[默认 Compose 配置](compose.yaml)
 
+与 PYP 同机部署时，可在启动命令中同时使用 `-f compose.yaml -f compose.pyp.yaml`。
+此配置将 `/data/artifacts` 绑定到宿主机 `/data/apps/pyp_data/reelucid/artifacts`，可用
+`REELUCID_ARTIFACTS_DIR` 指定其他宿主机路径。迁移已有实例时，等任务结束并停止 Reelucid 后迁移原产物目录，
+使容器内的 `/data/artifacts` 路径保持一致。挂载目录需能被 Reelucid 用户 UID 10001 写入。
+
 将 `REELUCID_SOURCE_PROXY` 写入项目根目录的 `.env`，再运行 `docker compose up -d --no-deps reelucid` 应用设置。代理用于视频来源网页及媒体请求，外部解析服务 API、ASR 权重下载和文本 AI 各自使用独立客户端。
 
 升级时沿用原 Compose 项目名和配置。等任务结束后停掉主服务，再备份完整数据卷，并记下旧镜像的标签或摘要。数据卷中包括 SQLite、WAL、密钥、配置、权重、原片和产物。
@@ -208,7 +213,7 @@ docker compose up -d --no-deps --wait reelucid
 curl -fsS http://127.0.0.1:8000/api/v1/health/ready
 ```
 
-新版本启动后，打开一条历史任务，并用短片试一次转录。回滚时先停止新版写入，再用原镜像和配置启动。如需恢复数据卷，先备份当前数据，因为旧快照只包含备份时刻的数据。日常停机可用 `docker compose down`，数据卷会保留。
+新版本启动后，打开一条历史任务，并用短片试一次转录。回滚时先停止新版写入，再用原镜像和配置启动。回滚到不认识最新 SQLite 迁移的版本时，使用升级前的 SQLite 备份。如需恢复数据卷，先备份当前数据，因为旧快照只包含备份时刻的数据。日常停机可用 `docker compose down`，数据卷会保留。
 
 ### 常见问题
 
