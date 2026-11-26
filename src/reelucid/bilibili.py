@@ -6,6 +6,7 @@ from urllib.parse import parse_qs, urlsplit
 from pydantic import AliasChoices, BaseModel, Field, ValidationError
 from yt_dlp.extractor.common import InfoExtractor
 
+from reelucid import __version__
 from reelucid.domain import ReelucidError
 from reelucid.network import validate_url
 
@@ -72,8 +73,9 @@ class BilibiliPublicIE(InfoExtractor):
     )
 
     def _real_extract(self, url: str) -> Any:
+        headers = {"Referer": "https://www.bilibili.com/", "User-Agent": f"Reelucid/{__version__}"}
         if urlsplit(url).hostname == "b23.tv":
-            response = self._request_webpage(url, "short-link")
+            response = self._request_webpage(url, "short-link", headers=headers)
             if response is False:
                 raise ReelucidError("DOWNLOAD_FAILED", "Bilibili 短链解析失败。")
             url = response.url
@@ -83,12 +85,12 @@ class BilibiliPublicIE(InfoExtractor):
                 "UNSUPPORTED_SOURCE", "仅支持 Bilibili 普通视频 BV/av 与 b23 短链。"
             )
         query = {"bvid": identifier} if identifier.startswith("BV") else {"aid": identifier[2:]}
-        headers = {"Referer": "https://www.bilibili.com/", "User-Agent": "Mozilla/5.0"}
+        api_headers = {**headers, "Accept": "application/json"}
         metadata: Any = self._download_json(
             "https://api.bilibili.com/x/web-interface/view",
             identifier,
             query=query,
-            headers=headers,
+            headers=api_headers,
         )
         try:
             data = BiliView.model_validate(self._data(metadata))
@@ -112,7 +114,7 @@ class BilibiliPublicIE(InfoExtractor):
                 "fnval": "4048",
                 "fourk": "0",
             },
-            headers=headers,
+            headers=api_headers,
         )
         try:
             media = BiliPlay.model_validate(self._data(play))
