@@ -154,6 +154,11 @@ for ((attempt=0; attempt<90; attempt++)); do
     sleep 1
 done
 (( attempt < 90 )) || fail "The new container did not become ready."
+docker exec "$candidate" python -c '
+from tempfile import TemporaryDirectory
+with TemporaryDirectory(dir="/data/artifacts"):
+    pass
+'
 if [[ -n $network ]]; then docker network connect --alias "$name" "$network" "$candidate"; fi
 if [[ -n $old ]]; then docker rm "$old" >/dev/null; fi
 trap - EXIT INT TERM
