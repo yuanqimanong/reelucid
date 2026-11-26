@@ -2,7 +2,7 @@ services:
   reelucid:
     volumes:
       - type: bind
-        source: ${REELUCID_ARTIFACTS_DIR:-/data/apps/pyp_data/reelucid/artifacts}
+        source: ${REELUCID_ARTIFACTS_DIR:?Set the host artifacts directory}
         target: /data/artifacts
         bind:
           create_host_path: false
